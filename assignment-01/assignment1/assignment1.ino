@@ -15,7 +15,7 @@ bool gameStarted = false;
 bool pattern[NUMBER];
 bool userPattern[NUMBER];
 bool patternGenerated = false;
-bool outOfTime = false;
+bool alreadyOutOfTime = false;
 int penalty = 0;
 int score = 0;
 int time2 = 5000;
@@ -43,39 +43,45 @@ void setup() {
 }
 
 void loop() {
-  if (!gameStarted) {
-    waitForStart();
-  }else {
-    if (!patternGenerated){
-      generatePattern(); 
-      render();
-      initialTime = millis();
-    }
-    
-    listenButtons();
-
-    if(millis() - initialTime >= time3 && !outOfTime){
-      assignPenalty();
-      outOfTime = true;
-      Serial.println("Out of time");    //debug
-    }
-    
-    if(checkWin()){
-      score++;
-      Serial.print("New point! Score: ");
-      Serial.println(score);
-      patternGenerated = false;
-      for(int i = 0; i < NUMBER; i++){
-        userPattern[i] = false;
+  if(!checkDefeat()){
+    if (!gameStarted) {
+      waitForStart();
+    }else {
+      if (!patternGenerated){
+        generatePattern();
+        turnGreenLedsOff();
+        delay(random(500, 3000));  //time1
+        render();
+        initialTime = millis();
       }
-      time2 = time2 / f;
-      time3 = time3 / f;
-      outOfTime = false;
-    }
-    
-    if(checkDefeat()){
-      Serial.print("Game Over. Final Score: ");
-      Serial.println(score);
+      
+      listenButtons();
+  
+      if(millis() - initialTime >= time3 && !alreadyOutOfTime){
+        assignPenalty();
+        alreadyOutOfTime = true;
+        Serial.println("Out of time");    //debug
+      }
+      
+      if(checkWin()){
+        score++;
+        Serial.print("New point! Score: ");
+        Serial.println(score);
+        patternGenerated = false;
+        for(int i = 0; i < NUMBER; i++){
+          userPattern[i] = false;
+        }
+        time2 = time2 / (f + 1) + 150;
+        time3 = time3 / (f + 1) + 1000;
+        Serial.println(time2);
+        Serial.println(time3);
+        alreadyOutOfTime = false;
+      }
+      
+      if(checkDefeat()){
+        Serial.print("Game Over. Final Score: ");
+        Serial.println(score);
+      }
     }
   }
 }
