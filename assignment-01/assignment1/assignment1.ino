@@ -73,8 +73,6 @@ void loop() {
         }
         time2 = time2 / (f + 1) + 150;
         time3 = time3 / (f + 1) + 1000;
-        Serial.println(time2);
-        Serial.println(time3);
         alreadyOutOfTime = false;
       }
       
