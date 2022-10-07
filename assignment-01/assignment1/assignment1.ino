@@ -4,6 +4,7 @@
 #define L1_PIN 7
 #define NUMBER 4
 #define RED_LED 11
+#define POT A1
 
 int delta = 2;
 int redledIntensity = 0;
@@ -15,6 +16,9 @@ bool pattern[NUMBER];
 bool userPattern[NUMBER];
 bool patternGenerated = false;
 int penalty = 0;
+int score = 0;
+int time2 = 5000;
+int f = 2;
 
 void setup() {
   Serial.begin(9600);
@@ -29,6 +33,8 @@ void setup() {
     pattern[i] = false;
   }
   attachInterrupt(digitalPinToInterrupt(buttons[0]), startGame, RISING);
+
+  pinMode(POT, INPUT);
   
   Serial.println("Welcome to the Catch the Led Pattern Game. Press Key T1 to Start");
 }
@@ -43,12 +49,22 @@ void loop() {
     }
     
     listenButtons();
+    
     if(checkWin()){
-      Serial.println("New point! Score: boh");
+      score++;
+      Serial.print("New point! Score: ");
+      Serial.println(score);
       patternGenerated = false;
       for(int i = 0; i < NUMBER; i++){
         userPattern[i] = false;
       }
+      time2 = time2 / f;
+      Serial.println(time2);
+    }
+    
+    if(checkDefeat()){
+      Serial.print("Game Over. Final Score: ");
+      Serial.println(score);
     }
   }
 }
@@ -61,6 +77,7 @@ void waitForStart() {
 }
 
 void startGame() {
+  f = analogRead(POT) / 256;    //Per la difficoltà
   gameStarted = true;
   digitalWrite(RED_LED, LOW);
   turnGreenLedsOff();   //Per sicurezza (?)
@@ -83,7 +100,7 @@ void render() {
       digitalWrite(greenLeds[i], HIGH);
     else digitalWrite(greenLeds[i], LOW);
   }
-  delay(random(1000, 5000));
+  delay(random(time2 / 2, time2));
   turnGreenLedsOff();
 }
 
@@ -125,4 +142,8 @@ void blinkLed(int pin){
   digitalWrite(pin, HIGH);
   delay(1000);
   digitalWrite(pin, LOW);
+}
+
+bool checkDefeat(){
+  return (penalty >= 3);
 }
