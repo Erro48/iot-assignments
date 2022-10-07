@@ -15,10 +15,13 @@ bool gameStarted = false;
 bool pattern[NUMBER];
 bool userPattern[NUMBER];
 bool patternGenerated = false;
+bool outOfTime = false;
 int penalty = 0;
 int score = 0;
 int time2 = 5000;
-int f = 2;
+int time3 = 15000;
+int f = 1;
+long initialTime = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -46,9 +49,16 @@ void loop() {
     if (!patternGenerated){
       generatePattern(); 
       render();
+      initialTime = millis();
     }
     
     listenButtons();
+
+    if(millis() - initialTime >= time3 && !outOfTime){
+      assignPenalty();
+      outOfTime = true;
+      Serial.println("Out of time");    //debug
+    }
     
     if(checkWin()){
       score++;
@@ -59,7 +69,8 @@ void loop() {
         userPattern[i] = false;
       }
       time2 = time2 / f;
-      Serial.println(time2);
+      time3 = time3 / f;
+      outOfTime = false;
     }
     
     if(checkDefeat()){
@@ -77,11 +88,15 @@ void waitForStart() {
 }
 
 void startGame() {
-  f = analogRead(POT) / 256;    //Per la difficoltà
+  f = (analogRead(POT) / 256) + 1;    //Per la difficoltà
   gameStarted = true;
   digitalWrite(RED_LED, LOW);
   turnGreenLedsOff();   //Per sicurezza (?)
   Serial.println("Go!");
+  //Debug
+  Serial.print("Difficoltà: ");
+  Serial.println(f);
+  //----
   detachInterrupt(digitalPinToInterrupt(T1_PIN));
 }
 
