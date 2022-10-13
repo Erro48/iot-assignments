@@ -11,7 +11,7 @@ int redledIntensity = 0;
 int buttons[NUMBER];
 int greenLeds[NUMBER];
 int startTime = 0;
-bool gameStarted = false;
+volatile bool gameStarted = false;
 bool pattern[NUMBER];
 bool userPattern[NUMBER];
 bool patternGenerated = false;
@@ -20,7 +20,7 @@ int penalty = 0;
 int score = 0;
 int time2 = 5000;
 int time3 = 15000;
-int f = 1;
+volatile int f = 1;
 long initialTime = 0;
 
 void setup() {
@@ -35,7 +35,7 @@ void setup() {
     pinMode(L1_PIN + i, OUTPUT);
     pattern[i] = false;
   }
-  attachInterrupt(digitalPinToInterrupt(buttons[0]), startGame, RISING);
+  attachInterrupt(digitalPinToInterrupt(T1_PIN), startGame, RISING);
 
   pinMode(POT, INPUT);
   
@@ -44,7 +44,10 @@ void setup() {
 
 void loop() {
   if(!checkDefeat()){
-    if (!gameStarted) {
+    noInterrupts();
+    bool start = gameStarted;
+    interrupts();
+    if (!start) {
       waitForStart();
     }else {
       if (!patternGenerated){
@@ -67,6 +70,7 @@ void loop() {
         score++;
         Serial.print("New point! Score: ");
         Serial.println(score);
+        delay(500);
         patternGenerated = false;
         for(int i = 0; i < NUMBER; i++){
           userPattern[i] = false;
@@ -79,9 +83,26 @@ void loop() {
       if(checkDefeat()){
         Serial.print("Game Over. Final Score: ");
         Serial.println(score);
+        //delay(10000);
+        delay(2000);
+        gameReset();
+        attachInterrupt(digitalPinToInterrupt(T1_PIN), startGame, RISING);
       }
     }
   }
+}
+
+void gameReset(){
+  delta = 2;
+  redledIntensity = 0;
+  gameStarted = false;
+  patternGenerated = false;
+  alreadyOutOfTime = false;
+  penalty = 0;
+  score = 0;
+  time2 = 5000;
+  time3 = 15000;
+  Serial.println("Welcome to the Catch the Led Pattern Game. Press Key T1 to Start");
 }
 
 void waitForStart() {
@@ -95,7 +116,6 @@ void startGame() {
   f = (analogRead(POT) / 256) + 1;    //Per la difficoltà
   gameStarted = true;
   digitalWrite(RED_LED, LOW);
-  turnGreenLedsOff();   //Per sicurezza (?)
   Serial.println("Go!");
   //Debug
   Serial.print("Difficoltà: ");
