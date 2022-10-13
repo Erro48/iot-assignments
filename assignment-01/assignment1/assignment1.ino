@@ -1,4 +1,5 @@
 #include <avr/sleep.h>
+#include <EnableInterrupt.h>
 
 #define T1_PIN 2
 #define L1_PIN 7
@@ -10,7 +11,6 @@ int delta = 2;
 int redledIntensity = 0;
 int buttons[NUMBER];
 int greenLeds[NUMBER];
-int startTime = 0;
 volatile bool gameStarted = false;
 bool pattern[NUMBER];
 bool userPattern[NUMBER];
@@ -22,6 +22,8 @@ int time2 = 5000;
 int time3 = 15000;
 volatile int f = 1;
 long initialTime = 0;
+long startWaitingTime = 0;
+bool sleeping = false;
 
 void setup() {
   Serial.begin(9600);
@@ -35,19 +37,21 @@ void setup() {
     pinMode(L1_PIN + i, OUTPUT);
     pattern[i] = false;
   }
-  attachInterrupt(digitalPinToInterrupt(T1_PIN), startGame, RISING);
+  enableInterrupt(digitalPinToInterrupt(T1_PIN), t1Pressed, RISING);
+  enableInterrupt(digitalPinToInterrupt(buttons[1]), wakeUp, RISING);
+  enableInterrupt(digitalPinToInterrupt(buttons[2]), wakeUp, CHANGE);
+  enableInterrupt(digitalPinToInterrupt(buttons[3]), wakeUp, CHANGE);
 
   pinMode(POT, INPUT);
+
+  startWaitingTime = millis();
   
   Serial.println("Welcome to the Catch the Led Pattern Game. Press Key T1 to Start");
 }
 
 void loop() {
   if(!checkDefeat()){
-    noInterrupts();
-    bool start = gameStarted;
-    interrupts();
-    if (!start) {
+    if (!gameStarted) {
       waitForStart();
     }else {
       if (!patternGenerated){
@@ -60,7 +64,7 @@ void loop() {
       
       listenButtons();
   
-      if(millis() - initialTime >= time3 && !alreadyOutOfTime){
+      if(!checkDefeat() && millis() - initialTime >= time3 && !alreadyOutOfTime){
         assignPenalty();
         alreadyOutOfTime = true;
         Serial.println("Out of time");    //debug
@@ -83,14 +87,14 @@ void loop() {
       if(checkDefeat()){
         Serial.print("Game Over. Final Score: ");
         Serial.println(score);
-        //delay(10000);
-        delay(2000);
+        delay(10000);
         gameReset();
-        attachInterrupt(digitalPinToInterrupt(T1_PIN), startGame, RISING);
       }
     }
   }
 }
+
+void wakeUp(){}
 
 void gameReset(){
   delta = 2;
@@ -102,14 +106,34 @@ void gameReset(){
   score = 0;
   time2 = 5000;
   time3 = 15000;
+  startWaitingTime = millis();
   Serial.println("Welcome to the Catch the Led Pattern Game. Press Key T1 to Start");
 }
 
 void waitForStart() {
-    analogWrite(RED_LED, redledIntensity); 
-    redledIntensity += delta;
-    delta = redledIntensity >= 255 | redledIntensity <= 0 ? -delta : delta;
-    delay(5);
+  analogWrite(RED_LED, redledIntensity); 
+  redledIntensity += delta;
+  delta = redledIntensity >= 255 | redledIntensity <= 0 ? -delta : delta;
+  delay(5);
+  if(millis() - startWaitingTime >= /*10000*/3000){
+    sleeping = true;
+    goSleeping();
+  }
+}
+
+void goSleeping(){
+  set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+  sleep_enable();
+  sleep_mode();
+  sleep_disable();
+  sleeping = false;
+  startWaitingTime = millis();
+}
+
+void t1Pressed(){
+  if (!sleeping && !gameStarted){
+    startGame();
+  }
 }
 
 void startGame() {
@@ -121,7 +145,6 @@ void startGame() {
   Serial.print("Difficoltà: ");
   Serial.println(f);
   //----
-  detachInterrupt(digitalPinToInterrupt(T1_PIN));
 }
 
 void generatePattern() {
