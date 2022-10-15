@@ -24,6 +24,7 @@ volatile int f = 1;
 long initialTime = 0;
 long startWaitingTime = 0;
 volatile bool sleeping = false;
+volatile bool isRendering = false;
 
 volatile long lastButtonPressedTime = 0;
 
@@ -124,20 +125,20 @@ void waitForStart() {
 void goSleeping(){
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
-  
   sleep_mode();
   sleep_disable();
-  delay(1000);
   startWaitingTime = millis();
 }
 
 void t1Pressed(){
-  if (millis() - lastButtonPressedTime > 200) {  
-    Serial.println("a");
+  if (millis() - lastButtonPressedTime > 200) {
     if (!sleeping && !gameStarted){
       startGame();
+    } else if(isRendering) {
+      assignPenalty();
+    } else {
+      sleeping = false;
     }
-    sleeping = false;
   }
 
   lastButtonPressedTime = millis();
@@ -146,8 +147,12 @@ void t1Pressed(){
 
 void wakeUp(){
   if (millis() - lastButtonPressedTime > 200) {
-    sleeping = false;
-    Serial.println("Wake Up");
+    if (isRendering) {
+      assignPenalty();
+    } else {
+      sleeping = false;
+    }
+    
   }
   lastButtonPressedTime = millis();
   
@@ -174,13 +179,18 @@ void generatePattern() {
 }
 
 void render() {
+  isRendering = true;
   for (int i=0; i<NUMBER;i++) {
     if (pattern[i])
       digitalWrite(greenLeds[i], HIGH);
     else digitalWrite(greenLeds[i], LOW);
   }
+  long r = random(time2 / 2, time2);
+  //long vamos = millis();
+  //while(millis() - vamos < r){}
   delay(random(time2 / 2, time2));
   turnGreenLedsOff();
+  isRendering = false;
 }
 
 void turnGreenLedsOff(){
@@ -219,7 +229,9 @@ void assignPenalty(){
 
 void blinkLed(int pin){
   digitalWrite(pin, HIGH);
-  delay(1000);
+  for(int i = 0; i < 100; i++){
+    delayMicroseconds(10000);
+  }
   digitalWrite(pin, LOW);
 }
 
