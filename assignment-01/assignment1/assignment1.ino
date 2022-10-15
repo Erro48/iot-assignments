@@ -23,7 +23,9 @@ int time3 = 15000;
 volatile int f = 1;
 long initialTime = 0;
 long startWaitingTime = 0;
-bool sleeping = false;
+volatile bool sleeping = false;
+
+volatile long lastButtonPressedTime = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -37,10 +39,10 @@ void setup() {
     pinMode(L1_PIN + i, OUTPUT);
     pattern[i] = false;
   }
-  enableInterrupt(digitalPinToInterrupt(T1_PIN), t1Pressed, RISING);
-  enableInterrupt(digitalPinToInterrupt(buttons[1]), wakeUp, RISING);
-  enableInterrupt(digitalPinToInterrupt(buttons[2]), wakeUp, CHANGE);
-  enableInterrupt(digitalPinToInterrupt(buttons[3]), wakeUp, CHANGE);
+  enableInterrupt(T1_PIN, t1Pressed, RISING);
+  enableInterrupt(T1_PIN + 1, wakeUp, RISING);
+  enableInterrupt(buttons[2], wakeUp, CHANGE);
+  enableInterrupt(buttons[3], wakeUp, CHANGE);
 
   pinMode(POT, INPUT);
 
@@ -94,8 +96,6 @@ void loop() {
   }
 }
 
-void wakeUp(){}
-
 void gameReset(){
   delta = 2;
   redledIntensity = 0;
@@ -124,16 +124,33 @@ void waitForStart() {
 void goSleeping(){
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
   sleep_enable();
+  
   sleep_mode();
   sleep_disable();
-  sleeping = false;
+  delay(1000);
   startWaitingTime = millis();
 }
 
 void t1Pressed(){
-  if (!sleeping && !gameStarted){
-    startGame();
+  if (millis() - lastButtonPressedTime > 200) {  
+    Serial.println("a");
+    if (!sleeping && !gameStarted){
+      startGame();
+    }
+    sleeping = false;
   }
+
+  lastButtonPressedTime = millis();
+  
+}
+
+void wakeUp(){
+  if (millis() - lastButtonPressedTime > 200) {
+    sleeping = false;
+    Serial.println("Wake Up");
+  }
+  lastButtonPressedTime = millis();
+  
 }
 
 void startGame() {
