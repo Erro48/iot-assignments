@@ -67,10 +67,11 @@ void loop() {
       
       listenButtons();
   
-      if(!checkDefeat() && millis() - initialTime >= time3 && !alreadyOutOfTime){
+      if(!checkDefeat() && millis() - initialTime >= time3/* && !alreadyOutOfTime*/){
         assignPenalty();
-        alreadyOutOfTime = true;
+        //alreadyOutOfTime = true;
         Serial.println("Out of time");    //debug
+        patternGenerated = false;
       }
       
       if(checkWin()){
@@ -90,6 +91,7 @@ void loop() {
       if(checkDefeat()){
         Serial.print("Game Over. Final Score: ");
         Serial.println(score);
+        turnGreenLedsOff();
         delay(10000);
         gameReset();
       }
