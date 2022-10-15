@@ -7,8 +7,19 @@
 #define RED_LED 11
 #define POT A1
 
+#define MAX_PENALTIES 3
+#define MAX_VALUE 255
+#define MIN_VALUE 0
+
+#define DEEP_SLEEP_TIME 10 * 1000 // in milliseconds
+#define AFTER_GAME_END_TIME 10 * 1000
+#define DEBOUNCE_TIME 200
+#define TIME2 5000
+#define TIME3 7000
+#define REDUCTION_TIME_FACTOR 500
+
 int delta = 2;
-int redledIntensity = 0;
+int redledIntensity = MIN_VALUE;
 int buttons[NUMBER];
 int greenLeds[NUMBER];
 volatile bool gameStarted = false;
@@ -18,8 +29,8 @@ bool patternGenerated = false;
 bool alreadyOutOfTime = false;
 int penalty = 0;
 int score = 0;
-int time2 = 5000;
-int time3 = 15000;
+int time2 = TIME2;
+int time3 = TIME3;
 volatile int f = 1;
 long initialTime = 0;
 long startWaitingTime = 0;
@@ -41,9 +52,9 @@ void setup() {
     pattern[i] = false;
   }
   enableInterrupt(T1_PIN, t1Pressed, RISING);
-  enableInterrupt(T1_PIN + 1, wakeUp, RISING);
-  enableInterrupt(buttons[2], wakeUp, CHANGE);
-  enableInterrupt(buttons[3], wakeUp, CHANGE);
+  enableInterrupt(T1_PIN + 1, buttonPressed, RISING);
+  enableInterrupt(buttons[2], buttonPressed, CHANGE);
+  enableInterrupt(buttons[3], buttonPressed, CHANGE);
 
   pinMode(POT, INPUT);
 
@@ -67,9 +78,8 @@ void loop() {
       
       listenButtons();
   
-      if(!checkDefeat() && millis() - initialTime >= time3/* && !alreadyOutOfTime*/){
+      if(!checkDefeat() && millis() - initialTime >= time3){
         assignPenalty();
-        //alreadyOutOfTime = true;
         Serial.println("Out of time");    //debug
         patternGenerated = false;
       }
@@ -83,8 +93,13 @@ void loop() {
         for(int i = 0; i < NUMBER; i++){
           userPattern[i] = false;
         }
-        time2 = time2 / (f + 1) + 150;
-        time3 = time3 / (f + 1) + 1000;
+        //time2 = time2 / (f + 1) + 150;
+        //time3 = time3 / (f + 1) + 1000;
+        time2 = decreaseTime(time2, f);
+        time3 = decreaseTime(time3, f);
+
+        Serial.println(time2);
+        Serial.println(time3);
         alreadyOutOfTime = false;
       }
       
@@ -92,7 +107,7 @@ void loop() {
         Serial.print("Game Over. Final Score: ");
         Serial.println(score);
         turnGreenLedsOff();
-        delay(10000);
+        delay(AFTER_GAME_END_TIME);
         gameReset();
       }
     }
@@ -107,8 +122,8 @@ void gameReset(){
   alreadyOutOfTime = false;
   penalty = 0;
   score = 0;
-  time2 = 5000;
-  time3 = 15000;
+  time2 = TIME2;
+  time3 = TIME3;
   startWaitingTime = millis();
   Serial.println("Welcome to the Catch the Led Pattern Game. Press Key T1 to Start");
 }
@@ -116,9 +131,9 @@ void gameReset(){
 void waitForStart() {
   analogWrite(RED_LED, redledIntensity); 
   redledIntensity += delta;
-  delta = redledIntensity >= 255 | redledIntensity <= 0 ? -delta : delta;
+  delta = redledIntensity >= MAX_VALUE | redledIntensity <= MIN_VALUE ? -delta : delta;
   delay(5);
-  if(millis() - startWaitingTime >= /*10000*/3000){
+  if(millis() - startWaitingTime >= DEEP_SLEEP_TIME){
     sleeping = true;
     goSleeping();
   }
@@ -133,7 +148,7 @@ void goSleeping(){
 }
 
 void t1Pressed(){
-  if (millis() - lastButtonPressedTime > 200) {
+  if (millis() - lastButtonPressedTime > DEBOUNCE_TIME) {
     if (!sleeping && !gameStarted){
       startGame();
     } else if(isRendering) {
@@ -147,8 +162,8 @@ void t1Pressed(){
   
 }
 
-void wakeUp(){
-  if (millis() - lastButtonPressedTime > 200) {
+void buttonPressed(){
+  if (millis() - lastButtonPressedTime > DEBOUNCE_TIME) {
     if (isRendering) {
       assignPenalty();
     } else {
@@ -187,9 +202,6 @@ void render() {
       digitalWrite(greenLeds[i], HIGH);
     else digitalWrite(greenLeds[i], LOW);
   }
-  long r = random(time2 / 2, time2);
-  //long vamos = millis();
-  //while(millis() - vamos < r){}
   delay(random(time2 / 2, time2));
   turnGreenLedsOff();
   isRendering = false;
@@ -238,5 +250,11 @@ void blinkLed(int pin){
 }
 
 bool checkDefeat(){
-  return (penalty >= 3);
+  return (penalty >= MAX_PENALTIES);
+}
+
+long decreaseTime(long currentTime, int difficulty) {
+  static int trialNumber = 1;
+  long newTime = currentTime - floor((difficulty * REDUCTION_TIME_FACTOR) / trialNumber++);
+  return newTime <= 500 ? 500 : newTime;
 }
