@@ -5,7 +5,7 @@
 #define L1_PIN 7
 #define RED_LED 11
 #define POT A1
-#define NUMBER 4
+#define COMPONENTS_NUMBER 4
 
 #define MAX_PENALTIES 3
 #define MAX_VALUE 255

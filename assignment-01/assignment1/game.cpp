@@ -2,30 +2,28 @@
 
 int delta = 2;
 int redledIntensity = MIN_VALUE;
-int buttons[NUMBER];
-int greenLeds[NUMBER];
+int buttons[COMPONENTS_NUMBER];
+int greenLeds[COMPONENTS_NUMBER];
 volatile bool gameStarted = false;
-bool pattern[NUMBER];
-bool userPattern[NUMBER];
+bool pattern[COMPONENTS_NUMBER];
+bool userPattern[COMPONENTS_NUMBER];
 bool patternGenerated = false;
-bool alreadyOutOfTime = false;
-int penalty = 0;
+volatile int penalty = 0;
 int score = 0;
 int time2 = TIME2;
 int time3 = TIME3;
-volatile int f = 1;
+int f = 1;
 long initialTime = 0;
 long startWaitingTime = 0;
 volatile bool sleeping = false;
 volatile bool isRendering = false;
-
 volatile long lastButtonPressedTime = 0;
+
 void gameReset(){
   delta = 2;
   redledIntensity = 0;
   gameStarted = false;
   patternGenerated = false;
-  alreadyOutOfTime = false;
   penalty = 0;
   score = 0;
   time2 = TIME2;
@@ -57,7 +55,7 @@ void t1Pressed(){
   if (millis() - lastButtonPressedTime > DEBOUNCE_TIME) {
     if (!sleeping && !gameStarted){
       startGame();
-    } else if(isRendering) {
+    } else if(isRendering && !checkDefeat()) {
       assignPenalty();
     } else {
       sleeping = false;
@@ -70,7 +68,7 @@ void t1Pressed(){
 
 void buttonPressed(){
   if (millis() - lastButtonPressedTime > DEBOUNCE_TIME) {
-    if (isRendering) {
+    if (isRendering && !checkDefeat()) {
       assignPenalty();
     } else {
       sleeping = false;
@@ -82,18 +80,17 @@ void buttonPressed(){
 }
 
 void startGame() {
-  f = (analogRead(POT) / 256) + 1;    //Per la difficoltà
+  f = (analogRead(POT) / 256) + 1;
   gameStarted = true;
   digitalWrite(RED_LED, LOW);
   Serial.println("Go!");
-  //Debug
+
   Serial.print("Difficoltà: ");
   Serial.println(f);
-  //----
 }
 
 void generatePattern() {
-  for (int i=0; i<NUMBER; i++) {
+  for (int i=0; i<COMPONENTS_NUMBER; i++) {
     if (random(2)) {
       pattern[i] = true;
     } else pattern[i] = false;
@@ -103,7 +100,7 @@ void generatePattern() {
 
 void render() {
   isRendering = true;
-  for (int i=0; i<NUMBER;i++) {
+  for (int i=0; i<COMPONENTS_NUMBER;i++) {
     if (pattern[i])
       digitalWrite(greenLeds[i], HIGH);
     else digitalWrite(greenLeds[i], LOW);
@@ -114,13 +111,13 @@ void render() {
 }
 
 void turnGreenLedsOff(){
-  for (int i=0; i < NUMBER; i++) {
+  for (int i=0; i < COMPONENTS_NUMBER; i++) {
     digitalWrite(greenLeds[i], LOW);
   }
 }
 
 void listenButtons() {
-  for (int i = 0; i < NUMBER; i++) {
+  for (int i = 0; i < COMPONENTS_NUMBER; i++) {
     if(digitalRead(buttons[i]) == HIGH){
       if(!pattern[i]){
         assignPenalty();
@@ -133,7 +130,7 @@ void listenButtons() {
 }
 
 bool checkWin(){
-  for (int i = 0; i < NUMBER; i++) {
+  for (int i = 0; i < COMPONENTS_NUMBER; i++) {
     if(pattern[i] != userPattern[i]){
       return false;
     }
@@ -161,6 +158,14 @@ bool checkDefeat(){
 
 long decreaseTime(long currentTime, int difficulty) {
   static int trialNumber = 1;
-  long newTime = currentTime - floor((difficulty * REDUCTION_TIME_FACTOR) / trialNumber++);
+  static bool trialIncreased = false;
+  
+  long newTime = currentTime - floor((difficulty * REDUCTION_TIME_FACTOR) / trialNumber);
+
+  if (!trialIncreased) {
+    trialNumber++;
+  }
+  trialIncreased = !trialIncreased;
+  
   return newTime <= 500 ? 500 : newTime;
 }
