@@ -3,31 +3,27 @@
 
 #define SONAR_ECHO 8
 #define SONAR_TRIG 7
-#define WL1 800
-#define WL2 1500
+#define WL1 500
+#define WL2 800
 
-/*StateTask::StateTask(){
-}*/
   
 void StateTask::init(int period){
   Task::init(period);
-  this->state = 0;
+  this->_state = 0;
+  this->_sonar = new Sonar(SONAR_ECHO, SONAR_TRIG);
 }
   
 void StateTask::tick(){
-  digitalWrite(SONAR_TRIG, LOW);
-  delayMicroseconds(3);
-  int distance = pulseIn(SONAR_ECHO, HIGH);
+  int distance = _sonar->getDistance();
   if(distance < WL1){
-    this->state = 0;
+    this->_state = 0;
   } else if (distance >= WL1 && distance < WL2){
-    this->state = 1;
+    this->_state = 1;
   } else {
-    this->state = 2;
+    this->_state = 2;
   }
-  Serial.println(this->state);
 }
 
 int StateTask::getState() {
-  return this->state;
+  return this->_state;
 }

@@ -2,12 +2,13 @@
 #define __STATE_TASK__
 
 #include "Task.h"
+#include "Sonar.h"
 
 class StateTask: public Task {
 
 private:
-  int state;
-    
+  int _state;
+  Sonar* _sonar;
 public:
   void init(int period);
   void tick();
