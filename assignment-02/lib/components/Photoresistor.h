@@ -2,11 +2,13 @@
 #define __PHOTORESISTOR__
 
 class Photoresistor { 
-private:
-  int _pin;
+
 public:
   Photoresistor(int pin);
   int getLuminosity();
+
+private:
+  int _pin;
 };
 
 #endif

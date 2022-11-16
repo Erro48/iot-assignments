@@ -6,13 +6,14 @@
 
 class StateTask: public Task {
 
-private:
-  int _state;
-  Sonar* _sonar;
 public:
   void init(int period);
   void tick();
   int getState();
+
+private:
+  int _state;
+  Sonar* _sonar;
 };
 
 #endif

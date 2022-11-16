@@ -2,12 +2,14 @@
 #define __SONAR__
 
 class Sonar { 
-private:
-  int _echoPin;
-  int _trigPin;
+
 public:
   Sonar(int echoPin, int trigPin);
   int getDistance();
+
+private:
+  int _echoPin;
+  int _trigPin;
 };
 
 #endif

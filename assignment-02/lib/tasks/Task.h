@@ -2,23 +2,20 @@
 #define __TASK__
 
 class Task {
-  int myPeriod;
-  int timeElapsed;
-  bool active;
   
 public:
   virtual void init(int period){
-    myPeriod = period;  
-    timeElapsed = 0;
-    active = true;
+    _myPeriod = period;  
+    _timeElapsed = 0;
+    _active = true;
   }
 
   virtual void tick() = 0;
 
   bool updateAndCheckTime(int basePeriod){
-    timeElapsed += basePeriod;
-    if (timeElapsed >= myPeriod){
-      timeElapsed = 0;
+    _timeElapsed += basePeriod;
+    if (_timeElapsed >= _myPeriod){
+      _timeElapsed = 0;
       return true;
     } else {
       return false; 
@@ -26,13 +23,18 @@ public:
   }
 
   bool isActive(){
-    return active;
+    return _active;
   }
 
   void setActive(bool active){
-    this->active = active;
+    this->_active = active;
   }
-  
+
+private:
+  int _myPeriod;
+  int _timeElapsed;
+  bool _active;
+
 };
 
 #endif

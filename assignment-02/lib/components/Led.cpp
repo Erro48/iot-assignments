@@ -2,14 +2,14 @@
 #include "Arduino.h"
 
 Led::Led(int pin){
-  this->pin = pin;
+  this->_pin = pin;
   pinMode(pin, OUTPUT);
 }
 
 void Led::switchOn(){
-  digitalWrite(pin, HIGH);
+  digitalWrite(_pin, HIGH);
 }
 
 void Led::switchOff(){
-  digitalWrite(pin, LOW);
+  digitalWrite(_pin, LOW);
 };

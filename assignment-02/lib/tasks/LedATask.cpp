@@ -1,9 +1,7 @@
 #include <Arduino.h>
 #include "LedATask.h"
+#include "constants.h"
 
-#define PIR 9
-#define PHOTORESISTOR A0
-#define MIN_LUM 650
 
 LedATask::LedATask(int pin, StateTask* stateTask){
   this->_pin = pin;
@@ -13,8 +11,8 @@ LedATask::LedATask(int pin, StateTask* stateTask){
 void LedATask::init(int period){
   Task::init(period);
   this->_led = new Led(_pin);
-  this->_photoresistor = new Photoresistor(PHOTORESISTOR);
-  this->_pir = new Pir(PIR);
+  this->_photoresistor = new Photoresistor(P_PHOTORESISTOR);
+  this->_pir = new Pir(P_PIR);
   this->_state = OFF;
 }
   

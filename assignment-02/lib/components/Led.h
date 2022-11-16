@@ -4,12 +4,14 @@
 #include "Light.h"
 
 class Led: public Light { 
+
 public:
   Led(int pin);
   void switchOn();
   void switchOff();    
+
 private:
-  int pin;
+  int _pin;
 };
 
 #endif

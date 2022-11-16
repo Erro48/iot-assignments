@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include "Sonar.h"
-
-#define TRIG_DELAY 5
+#include <constants.h>
 
 Sonar::Sonar(int echoPin, int trigPin){
   this->_echoPin = echoPin;
