@@ -7,10 +7,10 @@ void timerHandler(void){
   _timerFlag = true;
 }
 
-void Scheduler::init(int _basePeriod){
-  this->_basePeriod = _basePeriod;
+void Scheduler::init(int basePeriod){
+  _basePeriod = basePeriod;
   _timerFlag = false;
-  long period = 1000l*_basePeriod;
+  long period = 1000l*basePeriod;
   Timer1.initialize(period);
   Timer1.attachInterrupt(timerHandler);
   _nTasks = 0;

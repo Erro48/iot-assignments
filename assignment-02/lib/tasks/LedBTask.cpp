@@ -2,22 +2,22 @@
 #include "LedBTask.h"
 
 LedBTask::LedBTask(int pin, StateTask* stateTask){
-  this->_pin = pin;
-  this->_stateTask = stateTask;
+  _pin = pin;
+  _stateTask = stateTask;
 }
   
 void LedBTask::init(int period){
   Task::init(period);
-  this->_led = new Led(_pin);
-  this->_state = OFF;
+  _led = new Led(_pin);
+  _state = OFF;
 }
   
 void LedBTask::tick(){
-  if(this->_state != ON && this->_stateTask->getState() == 0){
-    this->_led->switchOn();
-    this->_state = ON;
-  } else if(this->_state != OFF && this->_stateTask->getState() != 0) {
-    this->_led->switchOff();
-    this->_state = OFF;
+  if(_state != ON && _stateTask->getState() == StateTask::DeviceState::NORMAL){
+    _led->switchOn();
+    _state = ON;
+  } else if(_state != OFF && _stateTask->getState() != StateTask::DeviceState::NORMAL) {
+    _led->switchOff();
+    _state = OFF;
   }
 }

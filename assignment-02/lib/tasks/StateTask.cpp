@@ -4,21 +4,21 @@
   
 void StateTask::init(int period){
   Task::init(period);
-  this->_state = 0;
-  this->_sonar = new Sonar(P_SONAR_ECHO, P_SONAR_TRIG);
+  _state = DeviceState::NORMAL;
+  _sonar = new Sonar(P_SONAR_ECHO, P_SONAR_TRIG);
 }
   
 void StateTask::tick(){
   int distance = _sonar->getDistance();
   if(distance < WL1){
-    this->_state = 0;
+    _state = DeviceState::NORMAL;
   } else if (distance >= WL1 && distance < WL2){
-    this->_state = 1;
+    _state = DeviceState::PREALARM;
   } else {
-    this->_state = 2;
+    _state = DeviceState::ALARM;
   }
 }
 
-int StateTask::getState() {
-  return this->_state;
+StateTask::DeviceState StateTask::getState() {
+  return _state;
 }
