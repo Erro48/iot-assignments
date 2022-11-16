@@ -2,7 +2,6 @@
 #include <constants.h>
 #include "LedATask.h"
 
-
 LedATask::LedATask(int pin, StateTask* stateTask){
   this->_pin = pin;
   this->_stateTask = stateTask;
