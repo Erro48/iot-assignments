@@ -2,7 +2,7 @@
 #include "Pir.h"
 
 Pir::Pir(int pin){
-  this->_pin;
+  this->_pin = pin;
   pinMode(_pin, INPUT);
 }
 

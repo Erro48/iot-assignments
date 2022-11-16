@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include "Scheduler.h"
 #include "Task.h"
 #include "LedATask.h"
