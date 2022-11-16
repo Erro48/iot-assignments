@@ -17,8 +17,8 @@ void Scheduler::init(int _basePeriod){
 }
 
 bool Scheduler::addTask(Task* task){
-  if (nTasks < MAX_TASKS-1){
-    _taskList[nTasks] = task;
+  if (_nTasks < MAX_TASKS-1){
+    _taskList[_nTasks] = task;
     _nTasks++;
     return true;
   } else {
@@ -30,7 +30,7 @@ void Scheduler::schedule(){
   while (!_timerFlag){}
   _timerFlag = false;
 
-  for (int i = 0; i < nTasks; i++){
+  for (int i = 0; i < _nTasks; i++){
     if (_taskList[i]->isActive() && _taskList[i]->updateAndCheckTime(_basePeriod)){
       _taskList[i]->tick();
     }

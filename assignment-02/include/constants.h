@@ -4,3 +4,4 @@
 #define P_PHOTORESISTOR A0
 
 #define MIN_LUM 650
+#define TRIG_DELAY 3

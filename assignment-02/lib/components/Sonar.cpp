@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include "Sonar.h"
 #include <constants.h>
+#include "Sonar.h"
 
 Sonar::Sonar(int echoPin, int trigPin){
   this->_echoPin = echoPin;
