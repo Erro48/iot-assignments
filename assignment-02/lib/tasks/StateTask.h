@@ -7,12 +7,18 @@
 class StateTask: public Task {
 
 public:
+  enum DeviceState {
+    NORMAL,
+    PREALARM,
+    ALARM
+  };
+
   void init(int period);
   void tick();
-  int getState();
+  DeviceState getState();
 
 private:
-  int _state;
+  DeviceState _state;
   Sonar* _sonar;
 };
 

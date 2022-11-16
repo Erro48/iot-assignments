@@ -13,10 +13,10 @@ void LedBTask::init(int period){
 }
   
 void LedBTask::tick(){
-  if(this->_state != ON && this->_stateTask->getState() == 0){
+  if(this->_state != ON && this->_stateTask->getState() == StateTask::DeviceState::NORMAL){
     this->_led->switchOn();
     this->_state = ON;
-  } else if(this->_state != OFF && this->_stateTask->getState() != 0) {
+  } else if(this->_state != OFF && this->_stateTask->getState() != StateTask::DeviceState::NORMAL) {
     this->_led->switchOff();
     this->_state = OFF;
   }

@@ -13,10 +13,10 @@ void LedCTask::init(int period){
 }
   
 void LedCTask::tick(){
-  if(this->_state != OFF && this->_stateTask->getState() == 0){
+  if(this->_state != OFF && this->_stateTask->getState() == StateTask::DeviceState::NORMAL){
     this->_led->switchOff();
     this->_state = OFF;
-  } else if(this->_stateTask->getState() == 1){
+  } else if(this->_stateTask->getState() == StateTask::DeviceState::PREALARM){
     switch(this->_state){
       case ON:
         this->_led->switchOff();
@@ -28,7 +28,7 @@ void LedCTask::tick(){
         break;
     }
     Serial.print("Blinking - ");
-  } else if(this->_state != ON && this->_stateTask->getState() == 2){
+  } else if(this->_state != ON && this->_stateTask->getState() == StateTask::DeviceState::ALARM){
     this->_led->switchOn();
     this->_state = ON;
   }
