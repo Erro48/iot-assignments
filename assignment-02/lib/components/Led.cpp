@@ -2,7 +2,7 @@
 #include "Led.h"
 
 Led::Led(int pin){
-  this->_pin = pin;
+  _pin = pin;
   pinMode(pin, OUTPUT);
 }
 

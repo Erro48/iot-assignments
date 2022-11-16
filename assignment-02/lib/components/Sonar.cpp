@@ -3,8 +3,8 @@
 #include "Sonar.h"
 
 Sonar::Sonar(int echoPin, int trigPin){
-  this->_echoPin = echoPin;
-  this->_trigPin = trigPin;
+  _echoPin = echoPin;
+  _trigPin = trigPin;
   /*pinMode(_echoPin, INPUT);
   pinMode(_trigPin, OUTPUT);*/
 }
