@@ -25,7 +25,7 @@ val javaFXModules = listOf(
 )
 
 val supportedPlatforms = listOf("linux", "mac", "win")
-val javaFxVersion = 15
+val javaFxVersion = 17
 
 dependencies {
     

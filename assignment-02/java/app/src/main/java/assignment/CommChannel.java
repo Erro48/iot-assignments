@@ -1,4 +1,4 @@
-package esiot.module_lab_2_3;
+package assignment;
 
 /**
  * Simple interface for an async msg communication channel

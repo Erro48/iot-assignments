@@ -1,4 +1,5 @@
-package esiot.module_lab_2_3;
+package assignment;
+
 
 import java.util.concurrent.*;
 import jssc.*;
@@ -11,25 +12,22 @@ import jssc.*;
  */
 public class SerialCommChannel implements CommChannel, SerialPortEventListener {
 
+	private static final int QUEUE_SIZE = 100;
+
 	private SerialPort serialPort;
 	private BlockingQueue<String> queue;
 	private StringBuffer currentMsg = new StringBuffer("");
 	
 	public SerialCommChannel(String port, int rate) throws Exception {
-		queue = new ArrayBlockingQueue<String>(100);
-
+		queue = new ArrayBlockingQueue<String>(QUEUE_SIZE);
 		serialPort = new SerialPort(port);
 		serialPort.openPort();
 
-		serialPort.setParams(rate,
-		                         SerialPort.DATABITS_8,
-		                         SerialPort.STOPBITS_1,
-		                         SerialPort.PARITY_NONE);
+		serialPort.setParams(rate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+		                        SerialPort.PARITY_NONE);
 
 		serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | 
-		                                  SerialPort.FLOWCONTROL_RTSCTS_OUT);
-
-		// serialPort.addEventListener(this, SerialPort.MASK_RXCHAR);
+		                            SerialPort.FLOWCONTROL_RTSCTS_OUT);
 		serialPort.addEventListener(this);
 	}
 
@@ -37,6 +35,7 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
 	public void sendMsg(String msg) {
 		char[] array = (msg+"\n").toCharArray();
 		byte[] bytes = new byte[array.length];
+
 		for (int i = 0; i < array.length; i++){
 			bytes[i] = (byte) array[i];
 		}
@@ -51,13 +50,11 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
 
 	@Override
 	public String receiveMsg() throws InterruptedException {
-		// TODO Auto-generated method stub
 		return queue.take();
 	}
 
 	@Override
 	public boolean isMsgAvailable() {
-		// TODO Auto-generated method stub
 		return !queue.isEmpty();
 	}
 
@@ -104,7 +101,7 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
         			}
         			
             } catch (Exception ex) {
-            		ex.printStackTrace();
+				ex.printStackTrace();
                 System.out.println("Error in receiving string from COM-port: " + ex);
             }
         }
