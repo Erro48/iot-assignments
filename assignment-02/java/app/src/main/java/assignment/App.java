@@ -15,7 +15,7 @@ public class App extends Application {
 
     @Override
     public final void start(final Stage primaryStage) throws Exception {
-        final Scene root = (Scene)FXMLLoader.load(ClassLoader.getSystemResource("resources/MainGui.fxml"));
+        final Scene root = (Scene)FXMLLoader.load(getClass().getResource("/MainGui.fxml"));
         primaryStage.setTitle("Water level App");
         primaryStage.setScene(root);
         primaryStage.show();

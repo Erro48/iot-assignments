@@ -8,7 +8,11 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
-    application
+  java
+  
+  application
+  
+  id("org.openjfx.javafxplugin") version "0.0.8"
 }
 
 repositories {
@@ -48,3 +52,4 @@ tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
