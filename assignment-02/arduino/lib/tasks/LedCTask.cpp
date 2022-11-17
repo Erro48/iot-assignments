@@ -23,11 +23,8 @@ void LedCTask::tick(){
         _state = ON;
         break;
     }
-    Serial.print("Blinking - ");
   } else if(_state != ON && _stateTask->getState() == StateTask::DeviceState::ALARM){
     _led->switchOn();
     _state = ON;
   }
-  Serial.print("State: ");
-  Serial.println(_state);
 }

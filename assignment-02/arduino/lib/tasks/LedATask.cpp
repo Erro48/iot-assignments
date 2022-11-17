@@ -12,14 +12,14 @@ LedATask::LedATask(int pin, StateTask* stateTask){
 }
   
 void LedATask::tick(){
-  Serial.println(_pir->isTriggered());
-  Serial.println(_photoresistor->getLuminosity());
-  if(_stateTask->getState() != 2){
-    if(_state != ON/* && _pir->isTriggered()*/ && _photoresistor->getLuminosity() < MIN_LUM){
+  _pir->updateLastTrigger();
+  
+  if(_stateTask->getState() != StateTask::DeviceState::ALARM){
+    if(_state != ON && _pir->isTriggered() && _photoresistor->getLuminosity() < MIN_LUM){
       _led->switchOn();
       _state = ON;
     }
-    if(_state != OFF && (/*!_pir->isTriggered() || */_photoresistor->getLuminosity() >= MIN_LUM)){
+    if(_state != OFF && (millis() - _pir->getLastTrigger() > T1 || _photoresistor->getLuminosity() >= MIN_LUM)){
       _led->switchOff();
       _state = OFF;
     }

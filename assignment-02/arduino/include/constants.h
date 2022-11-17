@@ -22,5 +22,8 @@
 #define TRIG_DELAY 3
 #define WL1 500
 #define WL2 800
+#define T1 3000
+
+
 
 #endif
