@@ -13,8 +13,9 @@ public:
     ALARM
   };
 
-  void init(int period);
-  void tick();
+  StateTask();
+
+  void tick() override;
   DeviceState getState();
 
 private:

@@ -9,8 +9,7 @@ class LedBTask: public Task {
 
 public:
   LedBTask(int pin, StateTask* stateTask);  
-  void init(int period);
-  void tick();
+  void tick() override;
 
 private:
   int _pin;

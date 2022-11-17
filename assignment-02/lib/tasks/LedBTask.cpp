@@ -4,13 +4,10 @@
 LedBTask::LedBTask(int pin, StateTask* stateTask){
   _pin = pin;
   _stateTask = stateTask;
-}
-  
-void LedBTask::init(int period){
-  Task::init(period);
   _led = new Led(_pin);
   _state = OFF;
 }
+  
   
 void LedBTask::tick(){
   if(_state != ON && _stateTask->getState() == StateTask::DeviceState::NORMAL){

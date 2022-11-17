@@ -4,8 +4,6 @@
 #include <constants.h>
 #include "Task.h"
 
-
-
 class Scheduler {  
 
 public:

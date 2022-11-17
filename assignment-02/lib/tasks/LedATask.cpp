@@ -5,10 +5,6 @@
 LedATask::LedATask(int pin, StateTask* stateTask){
   _pin = pin;
   _stateTask = stateTask;
-}
-  
-void LedATask::init(int period){
-  Task::init(period);
   _led = new Led(_pin);
   _photoresistor = new Photoresistor(P_PHOTORESISTOR);
   _pir = new Pir(P_PIR);

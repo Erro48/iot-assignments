@@ -2,13 +2,12 @@
 #include <constants.h>
 #include "StateTask.h"
   
-void StateTask::init(int period){
-  Task::init(period);
+StateTask::StateTask() {
   _state = DeviceState::NORMAL;
   _sonar = new Sonar(P_SONAR_ECHO, P_SONAR_TRIG);
 }
-  
-void StateTask::tick(){
+
+void StateTask::tick() {
   int distance = _sonar->getDistance();
   if(distance < WL1){
     _state = DeviceState::NORMAL;

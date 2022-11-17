@@ -4,10 +4,6 @@
 LedCTask::LedCTask(int pin, StateTask* stateTask){
   _pin = pin;
   _stateTask = stateTask;
-}
-  
-void LedCTask::init(int period){
-  Task::init(period);
   _led = new Led(_pin);
   _state = OFF;
 }

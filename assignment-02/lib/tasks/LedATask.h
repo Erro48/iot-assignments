@@ -11,8 +11,7 @@ class LedATask: public Task {
 
 public:
   LedATask(int pin, StateTask* stateTask);  
-  void init(int period);
-  void tick();
+  void tick() override;
 
 private:
   int _pin;
