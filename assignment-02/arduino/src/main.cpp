@@ -5,6 +5,7 @@
 #include "LedATask.h"
 #include "LedBTask.h"
 #include "LedCTask.h"
+#include "MotorTask.h"
 #include "StateTask.h"
 
 
@@ -26,13 +27,18 @@ void setup() {
 
   Task* lc = new LedCTask(P_LED_C, st);
   lc->init(100);
+
+  Task* m = new MotorTask(P_MOTOR, st);
+  m->init(100);
   
   s.addTask(st);
   s.addTask(la);
   s.addTask(lb);
   s.addTask(lc);
+  s.addTask(m);
 }
 
 void loop() {
+  Serial.println("Main Loop...");
   s.schedule();
 }
