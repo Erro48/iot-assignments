@@ -6,6 +6,10 @@
 #define P_SONAR_ECHO 8
 #define P_PIR 9
 #define P_PHOTORESISTOR A0
+#define P_LED_A 4
+#define P_LED_B 3
+#define P_LED_C 5
+
 
 #define MAX_TASKS 50
 #define MIN_LUM 650
