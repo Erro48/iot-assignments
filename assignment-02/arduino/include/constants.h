@@ -22,8 +22,12 @@
 #define TRIG_DELAY 3
 #define WL1 500
 #define WL2 800
+#define WLMAX 1500
 #define T1 3000
 
+#define SCHEDULER_PERIOD 30
+#define TASK_PERIOD 100
+#define T_LED_C_PERIOD 1000
 
 
 #endif

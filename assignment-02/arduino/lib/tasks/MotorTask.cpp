@@ -14,23 +14,31 @@ MotorTask::MotorTask(int pin, StateTask* stateTask) {
 }
 
 void MotorTask::tick() {
-    /*int distance = _sonar->getDistance();
+    int distance = _sonar->getDistance();
 
     if (_stateTask->getState() == StateTask::DeviceState::ALARM) {
         if (_lastDistance != distance) {
-            _alpha = map(distance, WL1, WL2, 0, 180);
+            if (distance > WLMAX) {
+                distance = WLMAX;
+            }
+            Serial.print("Distance: ");
+            Serial.println(distance);
+
+            _alpha = map(distance, WL2, WLMAX, 0, 180);
             _servo.write(_alpha);
 
+            Serial.print("_Alpha: ");
             Serial.println(_alpha);
+            Serial.println("-------------");
 
             _lastDistance = distance;
         }
-    }*/
-    Serial.println("HJC");
+    }
+    // Serial.println("HJC");
 
-    // digitalWrite(_pin, HIGH);
-    // delayMicroseconds(250);
-    // digitalWrite(_pin,LOW);
+    digitalWrite(_pin, HIGH);
+    delayMicroseconds(250);
+    digitalWrite(_pin,LOW);
 
 }
 
