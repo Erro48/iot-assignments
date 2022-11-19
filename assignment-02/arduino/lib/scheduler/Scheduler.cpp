@@ -1,5 +1,5 @@
-#include "Scheduler.h"
-#include <TimerOne.h>
+#include <Scheduler.h>
+#include <TimerTwo.h>
 
 volatile bool _timerFlag;
 
@@ -11,8 +11,9 @@ void Scheduler::init(int basePeriod){
   _basePeriod = basePeriod;
   _timerFlag = false;
   long period = 1000l*basePeriod;
-  Timer1.initialize(period);
-  Timer1.attachInterrupt(timerHandler);
+  Timer2.init(period, timerHandler);
+  // Timer2.attachInterrupt(timerHandler);
+  Timer2.start();
   _nTasks = 0;
 }
 

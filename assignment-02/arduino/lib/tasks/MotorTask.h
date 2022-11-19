@@ -19,7 +19,6 @@ private:
     int _alpha;
     Servo _servo;
     Sonar* _sonar;
-    int _temp;
 };
 
 #endif
