@@ -24,6 +24,8 @@
 #define WL2 800
 #define WLMAX 1500
 #define T1 3000
+// minimal change that get the motor moving
+#define MIN_MV 10
 
 #define SCHEDULER_PERIOD 30
 #define TASK_PERIOD 100
