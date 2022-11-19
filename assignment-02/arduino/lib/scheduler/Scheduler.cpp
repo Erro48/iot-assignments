@@ -11,8 +11,8 @@ void Scheduler::init(int basePeriod){
   _basePeriod = basePeriod;
   _timerFlag = false;
   long period = 1000l*basePeriod;
-  Timer2.init(period);
-  Timer2.attachInterrupt(timerHandler);
+  Timer2.init(period, timerHandler);
+  // Timer2.attachInterrupt(timerHandler);
   Timer2.start();
   _nTasks = 0;
 }

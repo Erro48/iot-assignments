@@ -27,7 +27,7 @@
 // minimal change that get the motor moving
 #define MIN_MV 10
 
-#define SCHEDULER_PERIOD 30
+#define SCHEDULER_PERIOD 10
 #define TASK_PERIOD 100
 #define T_LED_C_PERIOD 1000
 
