@@ -4,4 +4,6 @@ public interface MainView {
 
     void addData(int waterLevel);
     
+    
+    void deleteData();
 }

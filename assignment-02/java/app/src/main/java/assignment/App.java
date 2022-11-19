@@ -18,6 +18,7 @@ public class App extends Application {
     public final void start(final Stage primaryStage) throws Exception {
         final Scene root = (Scene)FXMLLoader.load(getClass().getResource("/MainGui.fxml"));
         
+        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest((e) -> { 
            Platform.exit();
            System.exit(0);       

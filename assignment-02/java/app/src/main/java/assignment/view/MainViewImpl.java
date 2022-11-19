@@ -32,4 +32,9 @@ public class MainViewImpl implements MainView {
                .format(new Timestamp(System.currentTimeMillis())), waterLevel));
     }
 
+    @Override
+    public void deleteData() {
+        this.data.getData().clear();
+    }
+
 }
