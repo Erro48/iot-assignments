@@ -38,6 +38,7 @@ class MainControllerImpl implements MainController {
     public void sendMotorAngle(final int angle) {
         if (this.manualControl) {
             //move
+            this.listener.sendMessage(String.valueOf(angle));
         }
     }
 
@@ -70,7 +71,7 @@ class MainControllerImpl implements MainController {
             while(true && this.channel.isPresent()) {
                 if (this.channel.get().isMsgAvailable()) {
                     try {
-                        String message = this.channel.get().receiveMsg();
+                        String message = this.channel.get().receiveMsg();   
                         Platform.runLater(() -> addWaterLevelRecord(Integer.parseInt(message)));
                     } catch (InterruptedException | NumberFormatException e) {
                         System.err.println("Cannot cast the message to a number");
@@ -84,6 +85,10 @@ class MainControllerImpl implements MainController {
             this.channel.ifPresent(channel -> SerialCommChannel.class.cast(channel).close());
         }
 
+        public void sendMessage(final String message) {
+            this.channel.ifPresent(channel -> channel.sendMsg(message));
+        }
+        
     }
 
 }

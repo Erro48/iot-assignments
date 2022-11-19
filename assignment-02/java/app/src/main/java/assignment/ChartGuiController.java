@@ -15,6 +15,8 @@ import jssc.SerialPortList;
 
 public class ChartGuiController {
 
+    private static final int MOTOR_STEP = 10;
+    
     @FXML
     private LineChart<String, Number> chart;
     
@@ -61,7 +63,11 @@ public class ChartGuiController {
             }
         });
         
-        controlSlider.valueProperty().addListener((obsValue, oldNum, newNum) -> controller.sendMotorAngle(newNum.intValue()));
+        controlSlider.valueProperty().addListener((obsValue, oldNum, newNum) -> {
+            if (newNum.intValue() % MOTOR_STEP == 0 && newNum.intValue() != oldNum.intValue()) {
+                controller.sendMotorAngle(newNum.intValue());       
+            }
+        });
         
         chart.getData().add(series); 
     }
