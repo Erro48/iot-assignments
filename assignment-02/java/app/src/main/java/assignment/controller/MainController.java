@@ -1,4 +1,4 @@
-package assignment;
+package assignment.controller;
 
 public interface MainController {
     
@@ -6,6 +6,6 @@ public interface MainController {
      * Updates the currentWaterLevel
      * @param waterLevel
      */
-    void setWaterLevel(int waterLevel);
+    void addWaterLevelRecord(int waterLevel);
 
 }
