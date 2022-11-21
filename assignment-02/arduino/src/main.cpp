@@ -19,7 +19,7 @@ void setup() {
   s.init(SCHEDULER_PERIOD);
 
   StateTask* st = new StateTask();
-  st->init(TASK_PERIOD);
+  st->init(NORMAL_SAMPLING_PERIOD);
   
   MotorModeTask* mm = new MotorModeTask(st);
   mm->init(TASK_PERIOD);
