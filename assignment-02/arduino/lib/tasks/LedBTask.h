@@ -14,7 +14,7 @@ public:
 private:
   int _pin;
   enum {ON, OFF} _state;
-  Light* _led;
+  Led _led;
   StateTask* _stateTask;
 
 };

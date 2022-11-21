@@ -20,8 +20,8 @@ private:
     int _lastDistance;
     int _alpha;
     Servo _servo;
-    Sonar* _sonar;
-    Potentiometer* _pot;
+    Sonar _sonar;
+    Potentiometer _pot;
     MotorModeTask* _motorModeTask;
     MotorModeTask::MotorMode _motorMode;
 

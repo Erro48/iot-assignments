@@ -3,12 +3,14 @@
 #include "MonitorTask.h"
 #include <MsgService.h>
 
-MonitorTask::MonitorTask() {
-  _sonar = new Sonar(P_SONAR_ECHO, P_SONAR_TRIG);
+MonitorTask::MonitorTask() : 
+  _sonar(P_SONAR_ECHO, P_SONAR_TRIG)
+{
+  
 }
 
 void MonitorTask::tick() {
-    int distance = _sonar->getDistance();
+    int distance = _sonar.getDistance();
     MsgService.sendMsg(String(distance));
 }
 

@@ -3,7 +3,10 @@
 #include "MotorTask.h"
 #include <MsgService.h>
 
-MotorTask::MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask) {
+MotorTask::MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask) :
+    _sonar(P_SONAR_ECHO, P_SONAR_TRIG),
+    _pot(P_POT)
+{
     _pin = pin;
     pinMode(_pin, OUTPUT);
     _stateTask = stateTask;
@@ -11,9 +14,7 @@ MotorTask::MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask
     _motorMode = MotorModeTask::MotorMode::AUTO;
 
     _alpha = MOTOR_MIN_ALPHA;
-    _sonar = new Sonar(P_SONAR_ECHO, P_SONAR_TRIG);
-    _pot = new Potentiometer(P_POT);
-    _lastDistance = _sonar->getDistance();
+    _lastDistance = _sonar.getDistance();
     _servo.attach(_pin);
 }
 
@@ -40,7 +41,7 @@ void MotorTask::tick() {
 }
 
 void MotorTask::autoMode() {
-    int distance = _sonar->getDistance();
+    int distance = _sonar.getDistance();
 
     if (_stateTask->getState() == StateTask::DeviceState::ALARM) {
         if (_lastDistance != distance && distance <= WLMAX && abs(_lastDistance - distance) > MIN_MV) {
@@ -56,7 +57,7 @@ void MotorTask::autoMode() {
 }
 
 void MotorTask::manualMode() {
-    _alpha = map(_pot->read(), POT_MIN_VALUE, POT_MAX_VALUE, MOTOR_MIN_ALPHA, MOTOR_MAX_ALPHA);
+    _alpha = map(_pot.read(), POT_MIN_VALUE, POT_MAX_VALUE, MOTOR_MIN_ALPHA, MOTOR_MAX_ALPHA);
 }
 
 void MotorTask::consoleMode() {

@@ -11,7 +11,7 @@ public:
   void tick() override;
 
 private:
-  Sonar* _sonar;
+  Sonar _sonar;
 };
 
 #endif
