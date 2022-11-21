@@ -7,6 +7,7 @@
 #include "LedCTask.h"
 #include "MotorTask.h"
 #include "StateTask.h"
+#include "LcdDisplay.h"
 #include "MotorModeTask.h"
 
 
@@ -14,6 +15,8 @@ Scheduler s;
 
 void setup() {
   Serial.begin(9600);
+
+  LcdDisplay lcd(LCD_ADDRESS, 2, 16);
   
   s.init(SCHEDULER_PERIOD);
 

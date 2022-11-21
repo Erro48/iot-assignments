@@ -34,7 +34,7 @@
 #define MOTOR_MIN_ALPHA 0
 #define MOTOR_MAX_ALPHA 180
 
-
+#define LCD_ADDRESS 0x27
 
 #define SCHEDULER_PERIOD 10
 #define TASK_PERIOD 100
