@@ -8,9 +8,11 @@ class LcdDisplay {
 
 public:
   LcdDisplay(int address, int rows, int cols);
+  void displayWaterLevel(int waterLevel);
+  void displayMotorAlpha(int alpha);
 
 private:
-    LiquidCrystal_I2C* _lcd;
+    LiquidCrystal_I2C _lcd;
 };
 
 #endif

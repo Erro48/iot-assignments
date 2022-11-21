@@ -40,6 +40,10 @@ void MotorTask::tick() {
     
 }
 
+int MotorTask::getAlpha() {
+    return _alpha;
+}
+
 void MotorTask::autoMode() {
     int distance = _sonar.getDistance();
 

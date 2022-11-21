@@ -39,15 +39,17 @@
 #define MOTOR_MIN_ALPHA 0
 #define MOTOR_MAX_ALPHA 180
 
-<<<<<<< HEAD
+// LCD
 #define LCD_ADDRESS 0x27
-=======
->>>>>>> main
+#define LCD_COLS 20
+#define LCD_ROWS 4
 
 #define SCHEDULER_PERIOD 10
 #define MONITOR_PERIOD 1000
 #define TASK_PERIOD 100
 #define T_LED_C_PERIOD 1000
+
+
 
 
 #endif

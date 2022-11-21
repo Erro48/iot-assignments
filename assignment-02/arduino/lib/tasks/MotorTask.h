@@ -13,6 +13,7 @@ class MotorTask: public Task {
 public:
     MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask);
     void tick() override;
+    int getAlpha();
 
 private:
     int _pin;
