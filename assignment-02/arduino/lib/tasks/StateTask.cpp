@@ -10,10 +10,10 @@ StateTask::StateTask() :
 
 void StateTask::tick() {
   int distance = _sonar.getDistance();
-  if(distance < WL1){
+  if(distance > WL1){
     _state = DeviceState::NORMAL;
     updatePeriod(NORMAL_SAMPLING_PERIOD);
-  } else if (distance >= WL1 && distance < WL2){
+  } else if (distance <= WL1 && distance > WL2){
     _state = DeviceState::PREALARM;
     updatePeriod(PREALARM_SAMPLING_PERIOD);
   } else {

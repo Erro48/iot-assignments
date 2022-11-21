@@ -20,9 +20,9 @@
 #define MAX_TASKS 50
 #define MIN_LUM 650
 #define TRIG_DELAY 3
-#define WL1 500
+#define WL1 1500
 #define WL2 800
-#define WLMAX 1500
+#define WLMAX 500
 #define T1 3000
 
 #define NORMAL_SAMPLING_PERIOD 100
