@@ -6,6 +6,7 @@ import assignment.view.MainViewImpl;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -19,6 +20,9 @@ public class ChartGuiController {
     
     @FXML
     private LineChart<String, Number> chart;
+    
+    @FXML
+    private NumberAxis yAxis;
     
     @FXML
     private Label wlLabel;
@@ -40,6 +44,14 @@ public class ChartGuiController {
         //defining a series
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Water level");
+        
+        yAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxis) {
+        	@Override
+        	public String toString(Number value) {
+        		return String.valueOf(-value.intValue());	
+        	}
+        });      	
+        
         
         /* detect serial ports */
         String[] portNames = SerialPortList.getPortNames();

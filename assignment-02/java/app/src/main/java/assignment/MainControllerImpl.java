@@ -22,7 +22,7 @@ class MainControllerImpl implements MainController {
 
     @Override
     public void addWaterLevelRecord(final int waterLevel) {
-        this.view.addData(waterLevel);
+        this.view.addData(-waterLevel);
     }
 
 
