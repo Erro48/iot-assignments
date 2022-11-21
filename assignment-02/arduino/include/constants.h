@@ -25,6 +25,10 @@
 #define WLMAX 1500
 #define T1 3000
 
+#define NORMAL_SAMPLING_PERIOD 100
+#define PREALARM_SAMPLING_PERIOD 80
+#define ALARM_SAMPLING_PERIOD 50
+
 // minimal change that get the motor moving
 #define MIN_MV 10
 #define DEBOUNCE_TIME 200

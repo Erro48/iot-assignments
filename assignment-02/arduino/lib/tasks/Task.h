@@ -30,6 +30,10 @@ public:
     this->_active = active;
   }
 
+  void updatePeriod(int period) {
+    _myPeriod = period;
+  }
+
 private:
   int _myPeriod;
   int _timeElapsed;
