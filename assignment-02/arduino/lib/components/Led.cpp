@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Led.h"
 
-Led::Led(int pin){
+Led::Led(int pin) {
   _pin = pin;
   pinMode(pin, OUTPUT);
 }

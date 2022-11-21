@@ -20,7 +20,7 @@ public:
 
 private:
   DeviceState _state;
-  Sonar* _sonar;
+  Sonar _sonar;
 };
 
 #endif

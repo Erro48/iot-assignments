@@ -19,8 +19,8 @@ public interface MainController {
     void sendMotorAngle(int angle);
     
     
-    boolean isManual();
+    void toggleMode();
     
     
-    void setManual(boolean value);
+    void handleError(String message);
 }

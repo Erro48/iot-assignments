@@ -9,15 +9,15 @@ import javafx.application.Platform;
 class MainControllerImpl implements MainController {
 
     private final MainView view;
-    private SerialListener listener;
+    private SerialHandler handler;
     private final int rate;
     private boolean manualControl = false;
     
     public MainControllerImpl(final MainView view, final String port, final int rate) {
         this.view = view;
         this.rate = rate;
-        this.listener = new SerialListener(port, rate);
-        this.listener.start();
+        this.handler = new SerialHandler(port, rate);
+        this.handler.start();
     }
 
     @Override
@@ -28,40 +28,49 @@ class MainControllerImpl implements MainController {
 
     @Override
     public void setPort(final String port) {
-        this.listener.closeChannel();
+        this.handler.closeChannel();
         this.view.deleteData();
-        this.listener = new SerialListener(port, this.rate);
-        this.listener.start();
+        this.handler = new SerialHandler(port, this.rate);
+        this.handler.start();
     }
 
     @Override
     public void sendMotorAngle(final int angle) {
         if (this.manualControl) {
             //move
-            this.listener.sendMessage(String.valueOf(angle));
+            this.handler.sendMessage(String.valueOf(angle));
         }
     }
-
-    @Override
-    public boolean isManual() {
-        return this.manualControl;
-    }
-
-    @Override
-    public void setManual(boolean value) {
-        this.manualControl = value;
-    }
-
     
-    class SerialListener extends Thread {
+	@Override
+	public void toggleMode() {
+		this.manualControl = !this.manualControl;
+		this.view.setButtonText(manualControl);
+	    this.handler.sendMessage(String.valueOf(this.manualControl));
+	}
+
+    @Override
+    public void handleError(final String message) {
+    	if (message.startsWith("[01]")) {
+    		this.view.setButtonText(false);
+    		this.view.showError(message.substring(4));
+    		this.manualControl = false;
+    		return;
+    	}
+    	
+    	this.view.showError(message);
+    }
+    
+    class SerialHandler extends Thread {
         
         private Optional<CommChannel> channel = Optional.empty();
 
-        public SerialListener(final String port, final int rate) {
+        public SerialHandler(final String port, final int rate) {
             try {
                 this.channel = Optional.of(new SerialCommChannel(port, rate));
             } catch (Exception e) {
-                System.err.println("Cannot create a CommChannel at port: " + port);
+                Platform.runLater(() -> handleError("Cannot create a CommChannel at port: " + port));
+            	System.err.println("Cannot create a CommChannel at port: " + port);
             } 
             this.setDaemon(true);
         }
@@ -71,10 +80,13 @@ class MainControllerImpl implements MainController {
             while(true && this.channel.isPresent()) {
                 if (this.channel.get().isMsgAvailable()) {
                     try {
-                        String message = this.channel.get().receiveMsg();   
-                        Platform.runLater(() -> addWaterLevelRecord(Integer.parseInt(message)));
+                        String message = this.channel.get().receiveMsg();  
+                        if (message.startsWith("*"))
+                        	Platform.runLater(() -> handleError(message.substring(1)));
+                        else
+                        	Platform.runLater(() -> addWaterLevelRecord(Integer.parseInt(message)));
                     } catch (InterruptedException | NumberFormatException e) {
-                        System.err.println("Cannot cast the message to a number");
+                        System.err.println("Unknown message");
                     }   
                 }    
             }

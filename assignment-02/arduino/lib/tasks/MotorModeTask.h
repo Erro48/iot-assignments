@@ -19,7 +19,7 @@ public:
 
 private:
     StateTask* _stateTask;
-    Button* _button;
+    Button _button;
     MotorMode _motorMode;
     bool _currentBtnState;
     bool _lastBtnState;

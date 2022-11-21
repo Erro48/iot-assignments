@@ -20,10 +20,15 @@
 #define MAX_TASKS 50
 #define MIN_LUM 650
 #define TRIG_DELAY 3
-#define WL1 500
+#define WL1 1500
 #define WL2 800
-#define WLMAX 1500
+#define WLMAX 500
 #define T1 3000
+
+#define NORMAL_SAMPLING_PERIOD 100
+#define PREALARM_SAMPLING_PERIOD 80
+#define ALARM_SAMPLING_PERIOD 50
+
 // minimal change that get the motor moving
 #define MIN_MV 10
 #define DEBOUNCE_TIME 200
@@ -34,9 +39,13 @@
 #define MOTOR_MIN_ALPHA 0
 #define MOTOR_MAX_ALPHA 180
 
+<<<<<<< HEAD
 #define LCD_ADDRESS 0x27
+=======
+>>>>>>> main
 
 #define SCHEDULER_PERIOD 10
+#define MONITOR_PERIOD 1000
 #define TASK_PERIOD 100
 #define T_LED_C_PERIOD 1000
 

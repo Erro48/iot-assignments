@@ -12,14 +12,15 @@ class LedATask: public Task {
 public:
   LedATask(int pin, StateTask* stateTask);  
   void tick() override;
+  ~LedATask();
 
 private:
   int _pin;
   enum {ON, OFF} _state;
-  Light* _led;
+  Led _led;
   StateTask* _stateTask;
-  Pir* _pir;
-  Photoresistor* _photoresistor;
+  Pir _pir;
+  Photoresistor _photoresistor;
 };
 
 #endif
