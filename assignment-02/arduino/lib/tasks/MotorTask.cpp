@@ -2,17 +2,45 @@
 #include <constants.h>
 #include "MotorTask.h"
 
-MotorTask::MotorTask(int pin, StateTask* stateTask) {
+MotorTask::MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask) {
     _pin = pin;
     pinMode(_pin, OUTPUT);
     _stateTask = stateTask;
-    _alpha = 0;
+    _motorModeTask = motorModeTask;
+    _motorMode = MotorModeTask::MotorMode::AUTO;
+
+    _alpha = MOTOR_MIN_ALPHA;
     _sonar = new Sonar(P_SONAR_ECHO, P_SONAR_TRIG);
+    _pot = new Potentiometer(P_POT);
     _lastDistance = _sonar->getDistance();
     _servo.attach(_pin);
 }
 
 void MotorTask::tick() {
+    _motorMode = _motorModeTask->getMotorMode();
+
+    switch (_motorMode)
+    {
+        case MotorModeTask::MotorMode::AUTO:
+        // Serial.println("AUTO MODE");
+        autoMode();
+        break;
+
+        case MotorModeTask::MotorMode::MANUAL:
+        // Serial.println("MANUAL MODE");
+        manualMode();
+        break;
+        
+        case MotorModeTask::MotorMode::CONSOLE:
+        consoleMode();
+        break;
+    }
+
+    _servo.write(_alpha);
+    
+}
+
+void MotorTask::autoMode() {
     int distance = _sonar->getDistance();
 
     if (_stateTask->getState() == StateTask::DeviceState::ALARM) {
@@ -20,25 +48,18 @@ void MotorTask::tick() {
             if (distance > WLMAX) {
                 distance = WLMAX;
             }
-            Serial.print("Distance: ");
-            Serial.println(distance);
 
-            _alpha = map(distance, WL2, WLMAX, 0, 180);
-
-            Serial.print("_Alpha: ");
-            Serial.println(_alpha);
-            Serial.println("-------------");
-            
-            _servo.write(_alpha);
-
+            _alpha = map(distance, WL2, WLMAX, MOTOR_MIN_ALPHA, MOTOR_MAX_ALPHA);
 
             _lastDistance = distance;
         }
     }
-    // Serial.println("HJC");
+}
 
-    // digitalWrite(_pin, HIGH);
-    // delayMicroseconds(250);
-    // digitalWrite(_pin,LOW);
+void MotorTask::manualMode() {
+    _alpha = map(_pot->read(), POT_MIN_VALUE, POT_MAX_VALUE, MOTOR_MIN_ALPHA, MOTOR_MAX_ALPHA);
+}
 
+void MotorTask::consoleMode() {
+    
 }

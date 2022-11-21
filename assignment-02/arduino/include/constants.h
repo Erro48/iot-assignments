@@ -26,6 +26,15 @@
 #define T1 3000
 // minimal change that get the motor moving
 #define MIN_MV 10
+#define DEBOUNCE_TIME 200
+
+#define POT_MIN_VALUE 0
+#define POT_MAX_VALUE 1023
+
+#define MOTOR_MIN_ALPHA 0
+#define MOTOR_MAX_ALPHA 180
+
+
 
 #define SCHEDULER_PERIOD 10
 #define TASK_PERIOD 100

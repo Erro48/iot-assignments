@@ -4,12 +4,14 @@
 #include <Servo.h>
 #include "Task.h"
 #include "Sonar.h"
+#include "Potentiometer.h"
 #include "StateTask.h"
+#include "MotorModeTask.h"
 
 class MotorTask: public Task {
 
 public:
-    MotorTask(int pin, StateTask* stateTask);
+    MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask);
     void tick() override;
 
 private:
@@ -19,6 +21,13 @@ private:
     int _alpha;
     Servo _servo;
     Sonar* _sonar;
+    Potentiometer* _pot;
+    MotorModeTask* _motorModeTask;
+    MotorModeTask::MotorMode _motorMode;
+
+    void autoMode();
+    void manualMode();
+    void consoleMode();
 };
 
 #endif
