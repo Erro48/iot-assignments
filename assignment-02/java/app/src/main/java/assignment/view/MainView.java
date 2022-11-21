@@ -6,4 +6,10 @@ public interface MainView {
     
     
     void deleteData();
+    
+    
+    void showError(String message);
+    
+
+    void setButtonText(boolean manual);
 }

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <constants.h>
 #include "MotorTask.h"
+#include <MsgService.h>
 
 MotorTask::MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask) {
     _pin = pin;
@@ -22,12 +23,10 @@ void MotorTask::tick() {
     switch (_motorMode)
     {
         case MotorModeTask::MotorMode::AUTO:
-        // Serial.println("AUTO MODE");
         autoMode();
         break;
 
         case MotorModeTask::MotorMode::MANUAL:
-        // Serial.println("MANUAL MODE");
         manualMode();
         break;
         
@@ -61,5 +60,10 @@ void MotorTask::manualMode() {
 }
 
 void MotorTask::consoleMode() {
-    
+    if (MsgService.isMsgAvailable()) {
+        Msg* msg = MsgService.receiveMsg();    
+        int alpha = msg->getContent().toInt();
+        _alpha = alpha;
+        delete msg;
+    }
 }
