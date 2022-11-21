@@ -20,7 +20,9 @@ void MotorModeTask::tick(){
             else _motorMode = MotorMode::AUTO;
         }
         _lastBtnState = _currentBtnState;
-    } 
+    } else if (_stateTask->getState() != StateTask::DeviceState::ALARM && _motorMode != MotorMode::AUTO) {
+        _motorMode = MotorMode::AUTO;
+    }
 }
 
 MotorModeTask::MotorMode MotorModeTask::getMotorMode() {
