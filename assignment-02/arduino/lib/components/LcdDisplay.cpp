@@ -9,16 +9,21 @@ _lcd(0x27, cols, rows) {
   _lcd.backlight();
   _lcd.clear();
   _lcd.setCursor(0, 0);
+  _lcd.print("Dio Canaglia!");
 }
 
 void LcdDisplay::displayWaterLevel(int waterLevel) {
-  _lcd.clear();
+  // _lcd.clear();
   _lcd.setCursor(1,1);
-  _lcd.print("Water: " + waterLevel);
+  _lcd.print("Water level: " + String(waterLevel));
 }
 
 void LcdDisplay::displayMotorAlpha(int alpha) {
-  _lcd.clear();
+  // _lcd.clear();
   _lcd.setCursor(1,2);
-  _lcd.print("Motor Alpha: " + alpha);
+  _lcd.print("Motor Alpha: " + String(alpha));
+}
+
+void LcdDisplay::clearDisplay() {
+  _lcd.clear();
 }

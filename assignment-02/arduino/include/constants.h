@@ -48,6 +48,7 @@
 #define MONITOR_PERIOD 1000
 #define TASK_PERIOD 100
 #define T_LED_C_PERIOD 1000
+#define DISPLAY_PERIOD 500
 
 
 

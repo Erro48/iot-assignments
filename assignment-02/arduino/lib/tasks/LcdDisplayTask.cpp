@@ -14,14 +14,16 @@ void LcdDisplayTask::tick(){
 
     switch(_stateTask->getState()) {
         case StateTask::DeviceState::NORMAL:
-
+        _lcd.clearDisplay();
         break;
 
         case StateTask::DeviceState::PREALARM:
+        _lcd.clearDisplay();
         _lcd.displayWaterLevel(_sonar.getDistance());
         break;
 
         case StateTask::DeviceState::ALARM:
+        _lcd.clearDisplay();
         _lcd.displayWaterLevel(_sonar.getDistance());
         _lcd.displayMotorAlpha(_motorTask->getAlpha());
         break;

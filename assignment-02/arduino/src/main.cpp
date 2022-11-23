@@ -41,7 +41,7 @@ void setup() {
   mt->init(MONITOR_PERIOD);
 
   Task* lcd = new LcdDisplayTask(st, m);
-  lcd->init(TASK_PERIOD);
+  lcd->init(DISPLAY_PERIOD);
 
   s.addTask(st);
   s.addTask(la);
