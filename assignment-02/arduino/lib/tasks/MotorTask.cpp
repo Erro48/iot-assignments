@@ -48,7 +48,7 @@ void MotorTask::autoMode() {
     int distance = _sonar.getDistance();
 
     if (_stateTask->getState() == StateTask::DeviceState::ALARM) {
-        if (_lastDistance != distance && distance >= WLMAX && abs(_lastDistance - distance) > MIN_MV) {
+        if (_lastDistance != distance && distance >= WLMAX && abs(_lastDistance - distance) > MIN_MOTOR_MV) {
             if (distance < WLMAX) {
                 distance = WLMAX;
             }

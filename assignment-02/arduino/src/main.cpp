@@ -32,7 +32,7 @@ void setup() {
   lb->init(TASK_PERIOD);
 
   Task* lc = new LedCTask(P_LED_C, st);
-  lc->init(T_LED_C_PERIOD);
+  lc->init(LED_C_PERIOD);
 
   MotorTask* m = new MotorTask(P_MOTOR, st, mm);
   m->init(TASK_PERIOD);

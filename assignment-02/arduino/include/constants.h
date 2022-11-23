@@ -16,7 +16,21 @@
 #define P_LED_C 5
 #define P_MOTOR 10
 
+
+/* PERIODS */
+#define SCHEDULER_PERIOD 10
+#define MONITOR_PERIOD 1000
+#define TASK_PERIOD 100
+#define LED_C_PERIOD 1000
+#define DISPLAY_PERIOD 500
+
+#define NORMAL_SAMPLING_PERIOD 100
+#define PREALARM_SAMPLING_PERIOD 80
+#define ALARM_SAMPLING_PERIOD 50
+
+
 /* CONSTANTS */
+/* -General */
 #define MAX_TASKS 50
 #define MIN_LUM 650
 #define TRIG_DELAY 3
@@ -24,33 +38,19 @@
 #define WL2 800
 #define WLMAX 500
 #define T1 3000
-
-#define NORMAL_SAMPLING_PERIOD 100
-#define PREALARM_SAMPLING_PERIOD 80
-#define ALARM_SAMPLING_PERIOD 50
-
 // minimal change that get the motor moving
-#define MIN_MV 10
+#define MIN_MOTOR_MV 10
 #define DEBOUNCE_TIME 200
 
+/* -Ranges */
 #define POT_MIN_VALUE 0
 #define POT_MAX_VALUE 1023
-
 #define MOTOR_MIN_ALPHA 0
 #define MOTOR_MAX_ALPHA 180
 
-// LCD
+/* -Lcd */
 #define LCD_ADDRESS 0x27
 #define LCD_COLS 20
 #define LCD_ROWS 4
-
-#define SCHEDULER_PERIOD 10
-#define MONITOR_PERIOD 1000
-#define TASK_PERIOD 100
-#define T_LED_C_PERIOD 1000
-#define DISPLAY_PERIOD 500
-
-
-
 
 #endif
