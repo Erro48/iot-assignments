@@ -3,19 +3,18 @@
 #include "MotorTask.h"
 #include <MsgService.h>
 
-MotorTask::MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask) :
+MotorTask::MotorTask(StateTask* stateTask, MotorModeTask* motorModeTask) :
     _sonar(P_SONAR_ECHO, P_SONAR_TRIG),
     _pot(P_POT)
 {
-    _pin = pin;
-    pinMode(_pin, OUTPUT);
+    pinMode(P_MOTOR, OUTPUT);
     _stateTask = stateTask;
     _motorModeTask = motorModeTask;
     _motorMode = MotorModeTask::MotorMode::AUTO;
 
     _alpha = MOTOR_MIN_ALPHA;
     _lastDistance = _sonar.getDistance();
-    _servo.attach(_pin);
+    _servo.attach(P_MOTOR);
 }
 
 void MotorTask::tick() {

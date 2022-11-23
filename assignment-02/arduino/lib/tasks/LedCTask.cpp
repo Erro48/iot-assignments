@@ -1,10 +1,10 @@
 #include <Arduino.h>
+#include <constants.h>
 #include "LedCTask.h"
 
-LedCTask::LedCTask(int pin, StateTask* stateTask) :
-  _led(pin)
+LedCTask::LedCTask(StateTask* stateTask) :
+  _led(P_LED_C)
 {
-  _pin = pin;
   _stateTask = stateTask;
   _state = OFF;
 }
