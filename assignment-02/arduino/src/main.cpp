@@ -49,7 +49,7 @@ void setup() {
   s.addTask(lc);
   s.addTask(m);
   s.addTask(mm);
-  //s.addTask(mt);
+  s.addTask(mt);
   s.addTask(lcd);
 }
 
