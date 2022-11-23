@@ -18,7 +18,7 @@ void LcdDisplay::displayWaterLevel(int waterLevel) {
 
 void LcdDisplay::displayMotorAlpha(int alpha) {
   _lcd.setCursor(1,2);
-  _lcd.print("Motor Alpha: " + String(alpha) + "°");
+  _lcd.print("Motor Alpha: " + String(alpha) + (char)223);
 }
 
 void LcdDisplay::clearDisplay() {
