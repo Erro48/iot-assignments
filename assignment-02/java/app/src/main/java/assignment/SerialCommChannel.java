@@ -39,7 +39,7 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
         for (int i = 0; i < array.length; i++){
             bytes[i] = (byte) array[i];
         }
-        
+
         try {
             synchronized (serialPort) {
                 serialPort.writeBytes(bytes);

@@ -9,8 +9,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 
-<Scene xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment.ChartGuiController">
+<Scene xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment.ChartGuiController">
     <AnchorPane prefHeight="600.0" prefWidth="800.0">
       <children>
          <LineChart fx:id="chart" layoutX="30.0" layoutY="103.0" prefHeight="395.0" prefWidth="741.0">
@@ -18,12 +19,14 @@
              <CategoryAxis side="BOTTOM" />
            </xAxis>
            <yAxis>
-             <NumberAxis side="LEFT" />
+             <NumberAxis fx:id="yAxis" side="LEFT" />
            </yAxis>
          </LineChart>
-         <Label fx:id="wlLabel" layoutX="30.0" layoutY="68.0" prefHeight="18.0" prefWidth="148.0" text="WaterLevel: NaN" />
+         <Label fx:id="wlLabel" layoutX="101.0" layoutY="69.0" prefHeight="18.0" prefWidth="148.0" text="Water level: NaN" />
+         <Circle fx:id="alarmLed" fill="#1fff46" layoutX="71.0" layoutY="78.0" radius="10.0" stroke="BLACK" strokeType="INSIDE" />
+      
          <ComboBox fx:id="comSelector" layoutX="621.0" layoutY="65.0" prefWidth="150.0" />
          <Button fx:id="controlButton" layoutX="71.0" layoutY="528.0" mnemonicParsing="false" text="Take control" />
-         <Slider fx:id="controlSlider" layoutX="224.0" layoutY="528.0" majorTickUnit="20" max="180.0" minorTickCount="1" prefHeight="14.0" prefWidth="392.0" showTickLabels="true" showTickMarks="true" snapToTicks="true"  />
+         <Slider fx:id="controlSlider" layoutX="224.0" layoutY="528.0" majorTickUnit="20" max="180.0" minorTickCount="1" prefHeight="14.0" prefWidth="392.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
       </children></AnchorPane>
 </Scene>
