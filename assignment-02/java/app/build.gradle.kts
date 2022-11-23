@@ -13,6 +13,8 @@ plugins {
   application
   
   id("org.openjfx.javafxplugin") version "0.0.8"
+  
+  id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
