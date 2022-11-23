@@ -2,12 +2,11 @@
 #include <constants.h>
 #include "LedATask.h"
 
-LedATask::LedATask(int pin, StateTask* stateTask) :
-  _led(pin),
+LedATask::LedATask(StateTask* stateTask) :
+  _led(P_LED_A),
   _pir(P_PIR),
   _photoresistor(P_PHOTORESISTOR)
 {
-  _pin = pin;
   _stateTask = stateTask;
   _state = OFF;
 }

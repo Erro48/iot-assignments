@@ -1,15 +1,7 @@
 #include <Arduino.h>
 #include <Scheduler.h>
 #include <constants.h>
-#include "Task.h"
-#include "LedATask.h"
-#include "LedBTask.h"
-#include "LedCTask.h"
-#include "MotorTask.h"
-#include "StateTask.h"
-#include "MotorModeTask.h"
-#include "MonitorTask.h"
-#include "LcdDisplayTask.h"
+#include <tasks.h>
 
 
 Scheduler s;
@@ -19,38 +11,38 @@ void setup() {
 
   s.init(SCHEDULER_PERIOD);
 
-  StateTask* st = new StateTask();
-  st->init(NORMAL_SAMPLING_PERIOD);
+  StateTask* stateTask = new StateTask();
+  stateTask->init(NORMAL_SAMPLING_PERIOD);
   
-  MotorModeTask* mm = new MotorModeTask(st);
-  mm->init(TASK_PERIOD);
+  MotorModeTask* motorModeTask = new MotorModeTask(stateTask);
+  motorModeTask->init(TASK_PERIOD);
   
-  Task* la = new LedATask(P_LED_A, st);
-  la->init(TASK_PERIOD);
+  Task* ledATask = new LedATask(stateTask);
+  ledATask->init(TASK_PERIOD);
 
-  Task* lb = new LedBTask(P_LED_B, st);
-  lb->init(TASK_PERIOD);
+  Task* ledBTask = new LedBTask(stateTask);
+  ledBTask->init(TASK_PERIOD);
 
-  Task* lc = new LedCTask(P_LED_C, st);
-  lc->init(LED_C_PERIOD);
+  Task* ledCTask = new LedCTask(stateTask);
+  ledCTask->init(LED_C_PERIOD);
 
-  MotorTask* m = new MotorTask(P_MOTOR, st, mm);
-  m->init(TASK_PERIOD);
+  MotorTask* motorTask = new MotorTask(stateTask, motorModeTask);
+  motorTask->init(TASK_PERIOD);
 
-  Task* mt = new MonitorTask();
-  mt->init(MONITOR_PERIOD);
+  Task* monitorTask = new MonitorTask();
+  monitorTask->init(MONITOR_PERIOD);
 
-  Task* lcd = new LcdDisplayTask(st, m);
-  lcd->init(DISPLAY_PERIOD);
+  Task* lcdTask = new LcdDisplayTask(stateTask, motorTask);
+  lcdTask->init(DISPLAY_PERIOD);
 
-  s.addTask(st);
-  s.addTask(la);
-  s.addTask(lb);
-  s.addTask(lc);
-  s.addTask(m);
-  s.addTask(mm);
-  s.addTask(mt);
-  s.addTask(lcd);
+  s.addTask(stateTask);
+  s.addTask(ledATask);
+  s.addTask(ledBTask);
+  s.addTask(ledCTask);
+  s.addTask(motorTask);
+  s.addTask(motorModeTask);
+  s.addTask(monitorTask);
+  s.addTask(lcdTask);
 }
 
 void loop() {

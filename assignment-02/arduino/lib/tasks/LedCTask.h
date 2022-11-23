@@ -8,11 +8,10 @@
 class LedCTask: public Task {
 
 public:
-  LedCTask(int pin, StateTask* stateTask);  
+  LedCTask(StateTask* stateTask);  
   void tick() override;
 
 private:
-  int _pin;
   enum {ON, OFF} _state;
   Led _led;
   StateTask* _stateTask;

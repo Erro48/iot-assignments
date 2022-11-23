@@ -11,12 +11,11 @@
 class MotorTask: public Task {
 
 public:
-    MotorTask(int pin, StateTask* stateTask, MotorModeTask* motorModeTask);
+    MotorTask(StateTask* stateTask, MotorModeTask* motorModeTask);
     void tick() override;
     int getAlpha();
 
 private:
-    int _pin;
     StateTask* _stateTask;
     int _lastDistance;
     int _alpha;

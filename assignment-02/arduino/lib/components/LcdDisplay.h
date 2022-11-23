@@ -11,9 +11,12 @@ public:
   void displayWaterLevel(int waterLevel);
   void displayMotorAlpha(int alpha);
   void clearDisplay();
+  void switchOn(bool value);
+  bool isSwitchedOff();
 
 private:
     LiquidCrystal_I2C _lcd;
+    bool _state;
 };
 
 #endif
