@@ -94,7 +94,7 @@ public class MainViewImpl implements MainView {
             alarmLed.setFill(Color.GREEN);       
         }
         else if (waterValue < WL1 && waterValue > WL2) {
-            this.preAlarmTransition.playFromStart();
+            this.preAlarmTransition.play();
         }
         else {
             this.preAlarmTransition.stop();
