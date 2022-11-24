@@ -10,6 +10,7 @@ _lcd(0x27, cols, rows) {
   _state = HIGH;
   _lcd.clear();
   _lcd.setCursor(0, 0);
+  _lcd.print("Setup Done");
 }
 
 void LcdDisplay::displayWaterLevel(int waterLevel) {

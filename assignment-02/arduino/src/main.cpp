@@ -33,7 +33,7 @@ void setup() {
   monitorTask->init(MONITOR_PERIOD);
 
   Task* lcdTask = new LcdDisplayTask(stateTask, motorTask);
-  lcdTask->init(DISPLAY_PERIOD);
+  lcdTask->init(MONITOR_PERIOD);
 
   s.addTask(stateTask);
   s.addTask(ledATask);

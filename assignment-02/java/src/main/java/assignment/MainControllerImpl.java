@@ -80,11 +80,19 @@ class MainControllerImpl implements MainController {
             while(true && this.channel.isPresent()) {
                 if (this.channel.get().isMsgAvailable()) {
                     try {
-                        String message = this.channel.get().receiveMsg();  
+                        String message = this.channel.get().receiveMsg();
+                        System.out.println(message);
                         if (message.startsWith("*"))
                         	Platform.runLater(() -> handleError(message.substring(1)));
                         else
-                        	Platform.runLater(() -> addWaterLevelRecord(Integer.parseInt(message)));
+                        	Platform.runLater(() -> { 
+	                        		try {
+	                        			addWaterLevelRecord(Integer.parseInt(message));
+	                            			
+	                        		} catch(NumberFormatException e) {
+	                        			
+	                        		}
+                        		});
                     } catch (InterruptedException | NumberFormatException e) {
                         System.err.println("Unknown message");
                     }   
