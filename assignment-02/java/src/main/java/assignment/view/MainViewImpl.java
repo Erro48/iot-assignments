@@ -25,9 +25,10 @@ public class MainViewImpl implements MainView {
     private static final int MAX_X_VALUES = 30;
     private static final int BLINK_PREALARM_DURATION = 1000;
 
-    private static final int WL1 = 1500;
-    private static final int WL2 = 800;
-    private static final int WL_MAX = 500;
+    private static final int WL1 = 9;
+    private static final int WL2 = 14;
+    private static final int WL_MAX = 26;
+    public static final int RIVERBED_LEVEL = 50;
     
     private final XYChart.Series<String, Number> data;
     private final Label label;
@@ -52,9 +53,9 @@ public class MainViewImpl implements MainView {
 
     @Override
     public void addData(final int waterLevel) {
-        this.label.setText(LABEL_TEXT + String.valueOf(-waterLevel));
+        this.label.setText(LABEL_TEXT + String.valueOf(waterLevel));
 
-        this.handleAlarm(-waterLevel);
+        this.handleAlarm(waterLevel);
 
         this.alarmLed.setStyle(BUTTON_REVOKE_TEXT);
 
@@ -89,11 +90,11 @@ public class MainViewImpl implements MainView {
     }
 
     private void handleAlarm(final int waterValue) {
-        if (waterValue > WL1) {
+        if (waterValue < WL1) {
             this.preAlarmTransition.stop();
             alarmLed.setFill(Color.GREEN);       
         }
-        else if (waterValue < WL1 && waterValue > WL2) {
+        else if (waterValue > WL1 && waterValue < WL2) {
             this.preAlarmTransition.play();
         }
         else {

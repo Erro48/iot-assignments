@@ -10,7 +10,11 @@ MonitorTask::MonitorTask() :
 }
 
 void MonitorTask::tick() {
-    int distance = _sonar.getDistance();
-    MsgService.sendMsg(String(distance));
+    int value = RIVERBED_LEVEL - _sonar.getDistance();
+    float t = value / 1000.0 / 1000.0 / 2;
+    float distance = t * SOUND_SPEED;
+    distance *= 100;
+
+    MsgService.sendMsg(String((int)distance));
 }
 

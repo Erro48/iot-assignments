@@ -33,6 +33,7 @@
 #define MAX_TASKS 50
 #define MIN_LUM 650
 #define TRIG_DELAY 3
+#define RIVERBED_LEVEL 2500
 #define WL1 1400
 #define WL2 700
 #define WLMAX 250
@@ -40,6 +41,7 @@
 // minimal change that get the motor moving
 #define MIN_MOTOR_MV 10
 #define DEBOUNCE_TIME 200
+#define SOUND_SPEED  (331.45 + 0.62*20)
 
 /* -Ranges */
 #define POT_MIN_VALUE 0

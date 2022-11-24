@@ -18,5 +18,6 @@ int Sonar::getDistance(){
   delayMicroseconds(TRIG_DELAY);
 
   int distance = pulseIn(_echoPin, HIGH);
+  distance = distance > RIVERBED_LEVEL ? RIVERBED_LEVEL : distance;
   return distance < 0 ? 0 : distance;
 }

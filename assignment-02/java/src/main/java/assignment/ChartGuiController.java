@@ -48,14 +48,9 @@ public class ChartGuiController {
         //defining a series
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Water level");
-
-        yAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxis) {
-            @Override
-            public String toString(Number value) {
-                return String.valueOf(-value.intValue());	
-            }
-        });      	
-
+        
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(MainViewImpl.RIVERBED_LEVEL);
 
         /* detect serial ports */
         String[] portNames = SerialPortList.getPortNames();
