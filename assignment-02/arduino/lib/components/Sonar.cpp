@@ -17,5 +17,6 @@ int Sonar::getDistance(){
   digitalWrite(_trigPin, LOW);
   delayMicroseconds(TRIG_DELAY);
 
-  return pulseIn(_echoPin, HIGH);
+  int distance = pulseIn(_echoPin, HIGH);
+  return distance < 0 ? 0 : distance;
 }

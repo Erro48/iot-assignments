@@ -34,9 +34,9 @@
 #define MAX_TASKS 50
 #define MIN_LUM 650
 #define TRIG_DELAY 3
-#define WL1 1500
-#define WL2 800
-#define WLMAX 500
+#define WL1 1400
+#define WL2 700
+#define WLMAX 250
 #define T1 3000
 // minimal change that get the motor moving
 #define MIN_MOTOR_MV 10
