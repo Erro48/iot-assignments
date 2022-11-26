@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <constants.h>
+#include <utils.h>
 #include "LcdDisplayTask.h"
 
 LcdDisplayTask::LcdDisplayTask(StateTask* stateTask, MotorTask* motorTask) :
@@ -21,13 +22,13 @@ void LcdDisplayTask::tick(){
         case StateTask::DeviceState::PREALARM:
         if (_lcd.isSwitchedOff()) _lcd.switchOn(true);
         _lcd.clearDisplay();
-        _lcd.displayWaterLevel(_sonar.getDistance());
+        _lcd.displayWaterLevel(sonarPulseToMeter(distanceToWaterLevel(_sonar.getDistance())));
         break;
 
         case StateTask::DeviceState::ALARM:
         if (_lcd.isSwitchedOff()) _lcd.switchOn(true);
         _lcd.clearDisplay();
-        _lcd.displayWaterLevel(_sonar.getDistance());
+        _lcd.displayWaterLevel(sonarPulseToMeter(distanceToWaterLevel(_sonar.getDistance())));
         _lcd.displayMotorAlpha(_motorTask->getAlpha());
         break;
     }
