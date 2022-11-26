@@ -50,7 +50,7 @@ public class ChartGuiController {
         series.setName("Water level");
         
         yAxis.setAutoRanging(false);
-        yAxis.setUpperBound(MainViewImpl.RIVERBED_LEVEL);
+        yAxis.setUpperBound(MainViewImpl.MAX_LEVEL_VALUE);
 
         /* detect serial ports */
         String[] portNames = SerialPortList.getPortNames();

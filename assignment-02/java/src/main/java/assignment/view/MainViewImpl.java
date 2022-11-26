@@ -20,15 +20,17 @@ import javafx.util.Duration;
 public class MainViewImpl implements MainView {
 
     private static final String LABEL_TEXT = "Water level: ";
+    private static final String MEASUREMENT_UNIT = "m";
     private static final String BUTTON_TAKE_TEXT = "Take control";
     private static final String BUTTON_REVOKE_TEXT = "Revoke control";
     private static final int MAX_X_VALUES = 30;
     private static final int BLINK_PREALARM_DURATION = 1000;
 
-    private static final int WL1 = 9;
-    private static final int WL2 = 14;
-    private static final int WL_MAX = 26;
-    public static final int RIVERBED_LEVEL = 50;
+    private static final int WL1 = 19;
+    private static final int WL2 = 31;
+    private static final int WL_MAX = 39;
+    public static final int RIVERBED_LEVEL = 43;
+    public static final int MAX_LEVEL_VALUE = 50;
     
     private final XYChart.Series<String, Number> data;
     private final Label label;
@@ -53,7 +55,7 @@ public class MainViewImpl implements MainView {
 
     @Override
     public void addData(final int waterLevel) {
-        this.label.setText(LABEL_TEXT + String.valueOf(waterLevel));
+        this.label.setText(LABEL_TEXT + String.valueOf(waterLevel) + MEASUREMENT_UNIT);
 
         this.handleAlarm(waterLevel);
 
@@ -94,7 +96,7 @@ public class MainViewImpl implements MainView {
             this.preAlarmTransition.stop();
             alarmLed.setFill(Color.GREEN);       
         }
-        else if (waterValue > WL1 && waterValue < WL2) {
+        else if (waterValue >= WL1 && waterValue < WL2) {
             this.preAlarmTransition.play();
         }
         else {
