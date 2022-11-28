@@ -15,7 +15,6 @@ MotorModeTask::MotorModeTask(StateTask* stateTask) :
 void MotorModeTask::tick(){
     _currentBtnState = _button.isPressed();
 
-
     /* check message command */
     if (MsgService.isMsgAvailable()) {
         Msg* msg = MsgService.receiveMsg();

@@ -19,7 +19,7 @@ MotorTask::MotorTask(StateTask* stateTask, MotorModeTask* motorModeTask) :
 
 void MotorTask::tick() {
     _motorMode = _motorModeTask->getMotorMode();
-
+    
     switch (_motorMode)
     {
         case MotorModeTask::MotorMode::AUTO:
@@ -53,6 +53,9 @@ void MotorTask::autoMode() {
             }
 
             _alpha = map(distance, WL2, WLMAX, MOTOR_MIN_ALPHA, MOTOR_MAX_ALPHA);
+            if(_alpha < 0){
+                _alpha = 0;
+            }
 
             _lastDistance = distance;
         }

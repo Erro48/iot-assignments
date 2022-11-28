@@ -38,7 +38,7 @@
 #define WL2 700
 #define WLMAX 250
 #define T1 3000
-// minimal change that get the motor moving
+// minimal change that gets the motor moving
 #define MIN_MOTOR_MV 10
 #define DEBOUNCE_TIME 200
 #define SOUND_SPEED  (331.45 + 0.62*20)
