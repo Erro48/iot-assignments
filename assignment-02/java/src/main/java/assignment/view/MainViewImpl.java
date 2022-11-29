@@ -54,7 +54,7 @@ public class MainViewImpl implements MainView {
     }
 
     @Override
-    public void addData(final int waterLevel) {
+    public void addData(final float waterLevel) {
         this.label.setText(LABEL_TEXT + String.valueOf(waterLevel) + MEASUREMENT_UNIT);
 
         this.handleAlarm(waterLevel);
@@ -91,7 +91,7 @@ public class MainViewImpl implements MainView {
         else this.button.setText(BUTTON_TAKE_TEXT);	
     }
 
-    private void handleAlarm(final int waterValue) {
+    private void handleAlarm(final float waterValue) {
         if (waterValue < WL1) {
             this.preAlarmTransition.stop();
             alarmLed.setFill(Color.GREEN);       

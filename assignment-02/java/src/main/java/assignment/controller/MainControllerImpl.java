@@ -1,12 +1,13 @@
-package assignment;
+package assignment.controller;
 
 import java.util.Optional;
 
-import assignment.controller.MainController;
+import assignment.CommChannel;
+import assignment.SerialCommChannel;
 import assignment.view.MainView;
 import javafx.application.Platform;
 
-class MainControllerImpl implements MainController {
+public class MainControllerImpl implements MainController {
 
     private final MainView view;
     private SerialHandler handler;
@@ -21,7 +22,7 @@ class MainControllerImpl implements MainController {
     }
 
     @Override
-    public void addWaterLevelRecord(final int waterLevel) {
+    public void addWaterLevelRecord(final float waterLevel) {
         this.view.addData(waterLevel);
     }
 
@@ -87,7 +88,7 @@ class MainControllerImpl implements MainController {
                         else
                         	Platform.runLater(() -> { 
 	                        		try {
-	                        			addWaterLevelRecord(Integer.parseInt(message));
+	                        			addWaterLevelRecord(Float.parseFloat(message));
 	                            			
 	                        		} catch(NumberFormatException e) {
 	                        			

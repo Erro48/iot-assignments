@@ -6,7 +6,7 @@ public interface MainController {
      * Updates the currentWaterLevel
      * @param waterLevel
      */
-    void addWaterLevelRecord(int waterLevel);
+    void addWaterLevelRecord(float waterLevel);
 
     /**
      * Changes the COM port

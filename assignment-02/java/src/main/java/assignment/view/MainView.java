@@ -6,7 +6,7 @@ public interface MainView {
      * Add a record to the chart
      * @param waterLevel
      */
-    void addData(int waterLevel);
+    void addData(float waterLevel);
     
     /**
      * Resets the chart
