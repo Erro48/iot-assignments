@@ -3,4 +3,5 @@
 
 ## Assignments
 - Assignment 01: Catch The Led Pattern ([specifications](https://docs.google.com/document/d/1Laz85KNlV7Ki7UdJ_EspSNRILhUkWMvhuiANpUSB98s/edit));
-- Assignment 02: Smart Bridge ([specifications](https://docs.google.com/document/d/16s0wVOWBpKCq3FkitngOBmHusA-5NXOpND3bSOkZWyc/edit)).
+- Assignment 02: Smart Bridge ([specifications](https://docs.google.com/document/d/16s0wVOWBpKCq3FkitngOBmHusA-5NXOpND3bSOkZWyc/edit));
+- Assignment 03: Smart Room ([specifications](https://docs.google.com/document/d/112rKjaMyOpBb6vsrsLVG4Cn5RtWpUQLryebDFTC_uc0/edit)).
