@@ -1,44 +1,19 @@
 package roomservice;
 
-import io.vertx.core.Vertx;
-import io.vertx.mqtt.MqttServer;
 
 public class Launcher {
-
-	public static void main(String[] args) {
-			Vertx vertx = Vertx.vertx();
-			MqttServer mqttServer = MqttServer.create(vertx);
-			mqttServer.endpointHandler(endpoint -> {
-		
-			  // shows main connect info
-			  System.out.println("MQTT client [" + endpoint.clientIdentifier() + "] request to connect, clean session = " + endpoint.isCleanSession());
-		
-			  if (endpoint.auth() != null) {
-			    System.out.println("[username = " + endpoint.auth().getUsername() + ", password = " + endpoint.auth().getPassword() + "]");
-			  }
-			  if (endpoint.will() != null) {
-			    System.out.println("[will topic = " + endpoint.will().getWillTopic() + " msg = " + new String(endpoint.will().getWillMessageBytes()) +
-			      " QoS = " + endpoint.will().getWillQos() + " isRetain = " + endpoint.will().isWillRetain() + "]");
-			  }
-		
-			  System.out.println("[keep alive timeout = " + endpoint.keepAliveTimeSeconds() + "]");
-		
-			  // accept connection from the remote client
-			  endpoint.accept(false);
-		
-			})
-			  .listen(ar -> {
-		
-			    if (ar.succeeded()) {
-		
-			      System.out.println("MQTT server is listening on port " + ar.result().actualPort());
-			    } else {
-		
-			      System.out.println("Error on starting the server");
-			      ar.cause().printStackTrace();
-			    }
-			  });
-		
-	}
+    /**
+     *  1. Receive MQTT messages with raw data
+     *  2. Parse data to values
+     *  3. Modify smart room state
+     *  4. Send values to arduino to control
+     *  5. Provide data with http to the dashboard
+     */
+    public static void main(String[] args) {
+        MessageSource input = new MqttMessageSourceImpl("esiot/test");
+        final SmartRoom room = new SmartRoomImpl();
+        room.setInputDataFrom(input);
+        input.start();
+    }
 
 }
