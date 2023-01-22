@@ -1,5 +1,7 @@
 package roomservice;
 
+import roomservice.smartroom.SmartRoom;
+import roomservice.smartroom.SmartRoomImpl;
 
 public class Launcher {
     /**

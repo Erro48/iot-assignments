@@ -17,6 +17,7 @@ repositories {
     jcenter()
 }
 
+
 dependencies {
 
     implementation ("io.vertx:vertx-core:4.3.1")    
@@ -30,5 +31,7 @@ dependencies {
 	/* for logging */
 	implementation ("org.slf4j:slf4j-api:1.7.25")
 	implementation ("org.slf4j:slf4j-jdk14:1.7.36")
+	
+    implementation("io.github.java-native:jssc:2.9.4")
 	
 }
