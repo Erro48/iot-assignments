@@ -13,11 +13,11 @@ public class MqttMessageSourceImpl extends AbstractVerticle implements MessageSo
 
     public MqttMessageSourceImpl(final String topic) {
         this.topic = topic;
+        this.handler = string -> System.out.println(string);
     }
 
     @Override
     public void start() {           
-        System.out.println("STARTING");
         final Vertx vertx = Vertx.vertx();
         final MqttClient client = MqttClient.create(vertx);
 

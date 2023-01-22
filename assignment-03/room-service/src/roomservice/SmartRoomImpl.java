@@ -9,13 +9,17 @@ import io.vertx.ext.web.Router;
 
 public class SmartRoomImpl implements SmartRoom {
 
+    private static final int REST_PORT = 8888;
+    
     private boolean lightOn;
     private int rollPercentage;
     private SmartRoomController controller;
+    private final TimeLogger timer;
  
     public SmartRoomImpl() {
         this.lightOn = false;
         this.rollPercentage = 0;
+        this.timer = new TimeLoggerImpl();
         this.startRestServer();
     }
     
@@ -23,9 +27,9 @@ public class SmartRoomImpl implements SmartRoom {
     public void setInputDataFrom(final MessageSource ms) {
         ms.setMessageHandler(message -> {
             try {
-                System.out.println("MESSAGE RECEIVED IN SmartRoom: " + message);
-                //final RoomData data = new RoomData(message);  
-                //this.controller.turnLight(false);
+                final RoomData data = new RoomData(message);  
+                //this.controller.turnLight(false);        
+                System.out.println("received: " + data.getLight() + " : " + data.getPir());
             } catch (Exception e) {
                 e.printStackTrace();
             }    
@@ -47,12 +51,15 @@ public class SmartRoomImpl implements SmartRoom {
         
         router.get("/roll")
                .respond( ctx -> Future.succeededFuture(this.rollPercentage));
+        
+        router.get("/lighttime")
+               .respond( ctx -> Future.succeededFuture(this.timer.getTimeOf(Event.LIGHT_ON)));
 
         vertx.createHttpServer()
             // Handle every request using the router
             .requestHandler(router)
             // Start listening
-            .listen(8888)
+            .listen(REST_PORT)
             // Print the port
             .onSuccess(server -> {
                 System.out.println("HTTP server started on port " + server.actualPort());
