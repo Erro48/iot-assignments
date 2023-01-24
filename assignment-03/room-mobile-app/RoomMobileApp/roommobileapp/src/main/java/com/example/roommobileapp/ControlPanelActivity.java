@@ -114,7 +114,6 @@ public class ControlPanelActivity extends AppCompatActivity {
                 String message = (lightStatus ? "on" : "off") + ";" + Integer.toString(rollerblindStatus);
                 String verboseMessage = "Light: " + message.split(";")[0] + "\nRollerblind: " + message.split(";")[1] + "%";
                 bluetoothOutputStream.write(message.getBytes(StandardCharsets.UTF_8));
-                //runOnUiThread(() -> confirmChangeButton.setBackgroundColor(ledState? Color.GREEN : Color.RED));
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -143,9 +142,10 @@ public class ControlPanelActivity extends AppCompatActivity {
         try {
             bluetoothOutputStream = socket.getOutputStream();
             Log.i(C.TAG, "Connection successful!");
-            confirmChangeButton.setEnabled(true);
+            runOnUiThread(() -> confirmChangeButton.setEnabled(true));
         } catch (IOException e) {
             Log.e(C.TAG, "Error occurred when creating output stream", e);
+            runOnUiThread(() -> confirmChangeButton.setEnabled(false));
         }
     }
 
