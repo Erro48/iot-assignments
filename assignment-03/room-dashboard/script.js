@@ -2,7 +2,6 @@
 
 const SLIDER_MAX = 100;
 const SLIDER_MIN = 0;
-
 const POLLING_DELAY = 500;
 
 class RoomStatus {
