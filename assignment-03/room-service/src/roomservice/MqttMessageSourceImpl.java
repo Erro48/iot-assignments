@@ -3,7 +3,6 @@ package roomservice;
 import java.util.function.Consumer;
 
 import io.vertx.core.AbstractVerticle;
-import io.vertx.core.Vertx;
 import io.vertx.mqtt.MqttClient;
 
 public class MqttMessageSourceImpl extends AbstractVerticle implements MessageSource {
@@ -18,7 +17,6 @@ public class MqttMessageSourceImpl extends AbstractVerticle implements MessageSo
 
     @Override
     public void start() {           
-        final Vertx vertx = Vertx.vertx();
         final MqttClient client = MqttClient.create(vertx);
 
         client.connect(1883, "broker.mqtt-dashboard.com", c -> {

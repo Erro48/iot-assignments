@@ -1,8 +1,7 @@
 package roomservice;
 
 import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoField;
+import java.util.Calendar;
 
 /**
  * Logs and records for how much time a status remains valid
@@ -38,6 +37,6 @@ public interface TimeLogger {
      *          The current hour 0-23
      */
     default int getCurrentHourTime() {
-        return Instant.now().get(ChronoField.HOUR_OF_DAY);
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY);            
     }
 }
