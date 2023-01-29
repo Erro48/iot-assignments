@@ -1,10 +1,9 @@
 package roomservice;
 
-import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
 import jssc.SerialPortException;
-import roomservice.smartroom.SmartRoom;
-import roomservice.smartroom.SmartRoomSerialImpl;
+import roomservice.verticles.MqttVerticle;
+import roomservice.verticles.SerialVerticle;
 
 public class Launcher {
     /**
@@ -16,10 +15,9 @@ public class Launcher {
      * @throws SerialPortException 
      */
     public static void main(String[] args) throws SerialPortException {
-        MessageSource input = new MqttMessageSourceImpl("esiot/test");
-        final SmartRoom room = new SmartRoomSerialImpl();
-        Vertx.vertx().deployVerticle((Verticle)input);
-        room.setInputDataFrom(input);
+        final Vertx vertx = Vertx.vertx();
+        vertx.deployVerticle(new MqttVerticle("broker.mqtt-dashboard.com", "roomservice/test"));
+        vertx.deployVerticle(new SerialVerticle("COM2", 9600));
     }
 
 }

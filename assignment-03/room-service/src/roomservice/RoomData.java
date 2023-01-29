@@ -1,9 +1,9 @@
-package roomservice.smartroom;
+package roomservice;
 
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 
-class RoomData {
+public class RoomData {
 
     private final static String LIGHT_KEY = "light";
     private final static String PIR_KEY = "pir";
