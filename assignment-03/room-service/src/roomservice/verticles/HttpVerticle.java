@@ -55,6 +55,7 @@ public class HttpVerticle extends AbstractVerticle {
             if (handler.succeeded()) {
                 ctx.response().end((String)handler.result().body());
             } else {
+                ctx.response().end();
                 System.err.println("Can not get data for address: " + address);
             }
         });
