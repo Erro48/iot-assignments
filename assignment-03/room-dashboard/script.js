@@ -2,32 +2,12 @@
 
 const SLIDER_MAX = 100;
 const SLIDER_MIN = 0;
-const POLLING_DELAY = 500;
+const POLLING_DELAY = 1000;
 
-class RoomStatus {
-    constructor(lights, slider) {
-        this.lights = lights;
-        this.slider = slider;
-    }
-
-    areLightsEqual(lights) {
-        return this.lights == lights
-    }
-
-    isSliderEquals(slider) {
-        return this.slider == slider
-    }
-
-    setLights(lights) {
-        this.lights = lights
-    }
-
-    setSlider(slider) {
-        this.slider = slider
-    }
+const oldRoomStatus = {
+    light: false,
+    roll: 0
 }
-
-const oldRoomStatus = new RoomStatus(false, 0)
 
 window.onload = () => {
     const slider = document.querySelector('#rollerblind-slider')
@@ -43,18 +23,19 @@ window.onload = () => {
     
     confirmChangeBtn.addEventListener('click', sendMessage)
 
-    setInterval(function () {
-        const msg = receiveMessage()
-        const [sliderValue, lightsOn] = decodeMsg(msg)
+    setInterval(async function () {
+        const [sliderValue, lightsOn] = await receiveMessage()
 
-        if (!oldRoomStatus.areLightsEqual(lightsOn)) {
+        console.log(sliderValue, lightsOn);
+
+        if (oldRoomStatus.light != lightsOn) {
             updateButton(lightsOn)
-            oldRoomStatus.setLights(lightsOn)
+            oldRoomStatus.light = lightsOn
         }
         
-        if (!oldRoomStatus.isSliderEquals(sliderValue)) {
+        if (oldRoomStatus.roll != sliderValue) {
             updateSlider(sliderValue)
-            oldRoomStatus.setSlider(sliderValue)
+            oldRoomStatus.roll = sliderValue
         }
     }, POLLING_DELAY)
 }
@@ -120,17 +101,21 @@ function checkSliderStatus() {
 }
 
 /* Message */
-function receiveMessage() {
-    return "39:on"
+async function receiveMessage() {
+    const lightStatus = await getLightStatus()
+    const rollStatus = await getRollerblindStatus()
+
+    return [lightStatus, rollStatus]
 }
 
 function sendMessage() {
     const sliderStatus = document.querySelector('#rollerblind-slider').value
-    const lightStatus = document.querySelector('#lights-status').value
+    const lightStatus = document.querySelector('#lights-status').value == 'On'
 
-    const msg = encodeMsg(sliderStatus, lightStatus)
+    console.log(sliderStatus, lightStatus);
 
-    // chiamata axios.update
+    updateLightStatus(lightStatus)
+    updateRollerblindStatus(sliderStatus)
 }
 
 function encodeMsg(slider, light) {
