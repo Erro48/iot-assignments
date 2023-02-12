@@ -1,6 +1,8 @@
 # Room Mobile App
 
 ## Installation
+To modify and debug the code you need to follow the steps below.
+
 ### Android device configuration
 Connect the android device to the USB of the pc.
 Select "No data transfer" from the "Use USB for" menu.
