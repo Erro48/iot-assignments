@@ -1,6 +1,7 @@
 package roomservice.verticles;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.CorsHandler;
@@ -20,6 +21,7 @@ public class HttpVerticle extends AbstractVerticle {
         router.route().handler(CorsHandler.create("*")
                 .allowedMethod(io.vertx.core.http.HttpMethod.GET)
                 .allowedMethod(io.vertx.core.http.HttpMethod.POST)
+                .allowedMethod(io.vertx.core.http.HttpMethod.PUT)
                 .allowedHeader("Access-Control-Request-Method")
                 .allowedHeader("Access-Control-Allow-Credentials")
                 .allowedHeader("Access-Control-Allow-Origin")
@@ -62,8 +64,14 @@ public class HttpVerticle extends AbstractVerticle {
     }
     
     private void sendData(final RoutingContext ctx, final String address, final String parameter) {
-        final String param = ctx.request().getParam(parameter);
-        vertx.eventBus().send(address, param);
-        ctx.response().end();
+    	ctx.request().bodyHandler(body -> {
+    		final JsonObject jsonObj = new JsonObject(body.toString());
+    		final String param = jsonObj.getString(parameter);
+    		
+            vertx.eventBus().send(address, param);
+            ctx.response().end();
+    	});
+    	
+        
     }
 }

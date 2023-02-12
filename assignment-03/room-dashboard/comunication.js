@@ -1,6 +1,6 @@
 'use strict'
 
-const HOST = 'http://zimbrando.duckdns.org'
+const HOST = 'http://localhost:8888'
 
 async function getLightStatus() {
     let val
@@ -19,13 +19,13 @@ async function getRollerblindStatus() {
 }
 
 function updateLightStatus(light) {
-    axios.post(HOST + '/light', JSON.stringify({ status: light }), {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
+    axios.put(HOST + `/light`, { status: light }, {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
         .then(response => console.log(response))
         .catch(err => console.log(err))
 }
 
 function updateRollerblindStatus(roll) {
-    axios.post(HOST + '/roll', JSON.stringify({ percentage: roll }), {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
+    axios.put(HOST + '/roll', { percentage: roll }, {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
         .then(response => console.log(response))
         .catch(err => console.log(err))
 }
