@@ -24,9 +24,7 @@ window.onload = () => {
     confirmChangeBtn.addEventListener('click', sendMessage)
 
     setInterval(async function () {
-        const [sliderValue, lightsOn] = await receiveMessage()
-
-        console.log(sliderValue, lightsOn);
+        const [lightsOn, sliderValue] = await receiveMessage()
 
         if (oldRoomStatus.light != lightsOn) {
             updateButton(lightsOn)
