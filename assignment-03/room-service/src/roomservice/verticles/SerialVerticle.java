@@ -1,24 +1,24 @@
-package roomservice.smartroom;
+package roomservice.verticles;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
-import java.util.concurrent.*;
-import jssc.*;
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.eventbus.EventBus;
+import jssc.SerialPort;
+import jssc.SerialPortEvent;
+import jssc.SerialPortEventListener;
+import jssc.SerialPortException;
 
-/**
- * Comm channel implementation based on serial port.
- * 
- * @author aricci
- *
- */
-public class SerialCommChannel implements CommChannel, SerialPortEventListener {
+public class SerialVerticle extends AbstractVerticle implements SerialPortEventListener{
 
     private static final int QUEUE_SIZE = 100;
-
+    
     private SerialPort serialPort;
     private BlockingQueue<String> queue;
     private StringBuffer currentMsg = new StringBuffer("");
-
-    public SerialCommChannel(String port, int rate) throws SerialPortException {
+    
+    public SerialVerticle(final String port, final int rate) throws SerialPortException {
         queue = new ArrayBlockingQueue<String>(QUEUE_SIZE);
         serialPort = new SerialPort(port);
         serialPort.openPort();
@@ -30,9 +30,16 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
                 SerialPort.FLOWCONTROL_RTSCTS_OUT);
         serialPort.addEventListener(this);
     }
-
+    
     @Override
-    public void sendMsg(String msg) {
+    public void start() {
+        final EventBus eventBus = vertx.eventBus();
+        eventBus.consumer("serial.tx", message -> {
+           this.sendMsg(message.body().toString()); 
+        });
+    }
+
+    public void sendMsg(final String msg) {
         char[] array = (msg+"\n").toCharArray();
         byte[] bytes = new byte[array.length];
 
@@ -48,44 +55,16 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
             ex.printStackTrace();
         }
     }
-
+    
     @Override
-    public String receiveMsg() throws InterruptedException {
-        return queue.take();
-    }
-
-    @Override
-    public boolean isMsgAvailable() {
-        return !queue.isEmpty();
-    }
-
-    /**
-     * This should be called when you stop using the port.
-     * This will prevent port locking on platforms like Linux.
-     */
-    public void close() {
-        try {
-            if (serialPort != null) {
-                serialPort.removeEventListener();
-                serialPort.closePort();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-
-    public void serialEvent(SerialPortEvent event) {
+    public void serialEvent(final SerialPortEvent event) {
         /* if there are bytes received in the input buffer */
         if (event.isRXCHAR()) {
             try {
                 String msg = serialPort.readString(event.getEventValue());
                 msg = msg.replaceAll("\r", "");
-
-                currentMsg.append(msg);
-
+                vertx.eventBus().publish("serial.rx", msg);
                 boolean goAhead = true;
-
                 while(goAhead) {
                     String msg2 = currentMsg.toString();
                     int index = msg2.indexOf("\n");
@@ -93,7 +72,7 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
                         queue.put(msg2.substring(0, index));
                         currentMsg = new StringBuffer("");
                         if (index + 1 < msg2.length()) {
-                            currentMsg.append(msg2.substring(index + 1)); 
+                            vertx.eventBus().publish("serial.rx", msg2.substring(index + 1));
                         }
                     } else {
                         goAhead = false;
@@ -106,4 +85,17 @@ public class SerialCommChannel implements CommChannel, SerialPortEventListener {
             }
         }
     }
+    
+    @Override
+    public void stop() {
+        try {
+            if (serialPort != null) {
+                serialPort.removeEventListener();
+                serialPort.closePort();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }  
+    }
+    
 }

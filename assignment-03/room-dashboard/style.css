@@ -1,0 +1,93 @@
+:root {
+    --primary: #000000;
+    --secondary: #2c2c2c;
+    --accent: #BB86FC;
+    --light-clr: #eee;
+    --light-on: gold;
+}
+
+body {
+    background-color: var(--primary);
+    color: var(--light-clr);
+    height: 100vh;
+}
+
+nav {
+    background-color: var(--secondary);
+}
+
+section.container form {
+    padding: 2em 0;
+}
+
+input[type=number]#rollerblind-status {
+    width: 15%;
+    background: none;
+    color: white;
+    border: none;
+    text-align: right;
+    -moz-appearance: textfield;
+    -webkit-appearance: textfield;
+    border-radius: 5px;
+    padding-right: .25em;
+}
+
+input[type=number]#rollerblind-status:focus {       
+    outline: 1px solid var(--light-clr);
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 100%;
+}
+
+.slider-label {
+    text-align: center;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    background-color: var(--accent);    
+}
+
+#lights-status {
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+input[type="button"] {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    background-color: var(--secondary);
+    color: var(--light-clr);
+    box-shadow: inset 2px 2px 3px rgba(0, 0, 0, .90), inset -2px -2px 3px rgba(255, 255, 255, 1);
+}
+
+#confirmChangeBtn {
+    margin-top: 3em;
+    background-color: var(--accent);
+    color: var(--secondary);
+    font-weight: 600;
+    box-shadow: inset -2px -2px 3px rgba(0, 0, 0, .90), inset 2px 2px 3px rgba(255, 255, 255, 1);
+}
+
+#confirmChangeBtn:active {
+    filter: brightness(.8);
+
+}
+
+input[type="button"].on {
+    background-color: var(--light-on);
+    color: var(--secondary);
+    font-weight: bold;
+    box-shadow: inset -2px -2px 3px rgba(0, 0, 0, .90), inset 2px 2px 3px rgba(255, 255, 255, 1);
+}
+
+fieldset > div {
+    height: 100%;
+    background-color: var(--secondary);
+    border-radius: 20px;
+    padding: 1.5em;
+    box-shadow: inset -3px -3px 5px rgba(0, 0, 0, .90), inset 3px 3px 7px rgba(255, 255, 255, 0.9);
+
+}
