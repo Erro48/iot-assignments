@@ -35,6 +35,9 @@ public class HttpVerticle extends AbstractVerticle {
         router.get("/roll")
             .handler( ctx -> this.getData(ctx, "request.rollpercentage"));
         
+        router.get("/lighttime")
+            .handler( ctx -> this.getData(ctx,  "request.lighttime"));
+        
         router.put("/light")
             .handler( ctx -> this.sendData(ctx, "controller.light", "status"));
 
@@ -65,9 +68,8 @@ public class HttpVerticle extends AbstractVerticle {
     
     private void sendData(final RoutingContext ctx, final String address, final String parameter) {
     	ctx.request().bodyHandler(body -> {
-    		final JsonObject jsonObj = new JsonObject(body.toString());
-    		final String param = jsonObj.getString(parameter);
-    		
+    	    final JsonObject jsonObj = new JsonObject(body.toString());
+    	    final String param = jsonObj.getString(parameter);
             vertx.eventBus().send(address, param);
             ctx.response().end();
     	});

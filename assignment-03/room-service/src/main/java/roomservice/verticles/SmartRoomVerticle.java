@@ -1,7 +1,10 @@
 package roomservice.verticles;
 
+import java.util.Map;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
+import io.vertx.core.json.JsonObject;
 import roomservice.RoomData;
 
 /**
@@ -57,7 +60,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
             case 'L':    
                 this.setLight(Boolean.parseBoolean(msg.substring(1)));
             break;
-            case 'R':
+            case 'M':
                 this.setRollPercentage(Integer.parseInt(msg.substring(1)));
             break;
             default: 
@@ -69,6 +72,10 @@ public class SmartRoomVerticle extends AbstractVerticle {
         if (this.light != status) {
             this.light = status;
             this.sendData(String.valueOf(this.light));
+            /* Start recording */
+            if (this.light) {
+                this.startRecord("light");
+            } else this.stopRecord("light");
         }
     }
     
@@ -87,4 +94,13 @@ public class SmartRoomVerticle extends AbstractVerticle {
         vertx.eventBus().send("serial.tx", msg);
     }
     
+    private void startRecord(final String event) {
+        final EventBus eventBus = vertx.eventBus();
+        eventBus.send("timer." + event, new JsonObject(Map.of("request", "start")));
+    }
+    
+    private void stopRecord(final String event) {
+        final EventBus eventBus = vertx.eventBus();
+        eventBus.send("timer." + event, new JsonObject(Map.of("request", "stop")));
+    }
 }

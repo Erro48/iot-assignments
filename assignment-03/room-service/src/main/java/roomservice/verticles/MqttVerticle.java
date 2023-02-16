@@ -6,6 +6,9 @@ import io.vertx.mqtt.MqttClient;
 
 public class MqttVerticle extends AbstractVerticle {
 
+    private static final int MQTT_PORT = 1883;
+    private static final int QOS_LEVEL = 2;
+    
     private final String topic;
     private final String address;
 
@@ -19,11 +22,11 @@ public class MqttVerticle extends AbstractVerticle {
         final MqttClient client = MqttClient.create(vertx);
         final EventBus eventBus = vertx.eventBus();
            
-        client.connect(1883, this.address, c -> {
+        client.connect(MQTT_PORT, this.address, c -> {
             client.publishHandler(s -> {
                 eventBus.publish("mqtt", s.payload().toString());
             })
-            .subscribe(this.topic, 2);            
+            .subscribe(this.topic, QOS_LEVEL);            
         });
     }
 

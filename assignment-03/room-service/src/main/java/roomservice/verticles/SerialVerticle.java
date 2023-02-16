@@ -78,7 +78,6 @@ public class SerialVerticle extends AbstractVerticle implements SerialPortEventL
                         goAhead = false;
                     }
                 }
-
             } catch (Exception ex) {
                 ex.printStackTrace();
                 System.out.println("Error in receiving string from COM-port: " + ex);

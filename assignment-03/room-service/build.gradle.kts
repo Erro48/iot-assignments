@@ -7,10 +7,9 @@
 
 plugins {
     // Apply the java-library plugin to add support for Java Library
-    java
-    
-    
+    id ("java")
     id ("java-library")
+	id ("application")
 }
 
 repositories {
@@ -33,4 +32,9 @@ dependencies {
 	
     implementation("io.github.java-native:jssc:2.9.4")
 	
+}
+
+application {
+    // Define the main class for the application
+    mainClass.set("roomservice.Launcher")
 }
