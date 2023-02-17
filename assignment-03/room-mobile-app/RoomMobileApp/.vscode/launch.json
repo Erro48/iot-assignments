@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "android",
+            "request": "launch",
+            "name": "Android launch",
+            "appSrcRoot": "${workspaceRoot}/roommobileapp/src/main",
+            "apkFile": "${workspaceRoot}/roommobileapp/build/outputs/apk/debug/roommobileapp-debug.apk",
+            "adbPort": 5037
+        },
+        {
+            "type": "android",
+            "request": "attach",
+            "name": "Android attach",
+            "appSrcRoot": "${workspaceRoot}/roommobileapp/src/main",
+            "adbPort": 5037,
+            "processId": "${command:PickAndroidProcess}"
+        }
+    ]
+}
