@@ -83,9 +83,11 @@ input[type="button"].on {
     box-shadow: inset -2px -2px 3px rgba(0, 0, 0, .90), inset 2px 2px 3px rgba(255, 255, 255, 1);
 }
 
-fieldset > div {
+fieldset > div,
+div > canvas {
     height: 100%;
-    background-color: var(--secondary);
+    /* background-color: var(--secondary); */
+    background-color: white;
     border-radius: 20px;
     padding: 1.5em;
     box-shadow: inset -3px -3px 5px rgba(0, 0, 0, .90), inset 3px 3px 7px rgba(255, 255, 255, 0.9);

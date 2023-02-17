@@ -1,0 +1,8 @@
+build/
+# !build/
+
+# build/*
+# !build/outputs/
+
+# build/outputs/*
+# !build/outputs/apk/
