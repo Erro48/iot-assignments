@@ -18,6 +18,14 @@ async function getRollerblindStatus() {
     return val
 }
 
+async function getHistory() {
+    let val
+    await axios.get(`${HOST}/history`)
+        .then(response => val = response.data)
+        .catch(err => console.error(err))
+    return val
+}
+
 function updateLightStatus(light) {
     axios.put(HOST + `/light`, { status: light }, {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
         .then(response => console.log(response))

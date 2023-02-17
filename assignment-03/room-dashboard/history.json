@@ -1,0 +1,45 @@
+[
+    {
+        "hour": "13:00",
+        "light": true,
+        "rollerblind": 45
+    },
+    {
+        "hour": "14:00",
+        "light": false,
+        "rollerblind": 89
+    },
+    {
+        "hour": "15:00",
+        "light": true,
+        "rollerblind": 89
+    },
+
+
+    {
+        "light": {
+            "status": [
+                {
+                    "time": "13:05:43",
+                    "status": true
+                },
+                {
+                    "time": "16:32:04",
+                    "status": false
+                }
+            ]
+        },
+        "rollerblind": {
+            "status": [
+                {
+                    "time": "13:05:12",
+                    "percentage": 90
+                },
+                {
+                    "time": "19:00:45",
+                    "percentage": 0
+                }
+            ]
+        }
+    }
+]
