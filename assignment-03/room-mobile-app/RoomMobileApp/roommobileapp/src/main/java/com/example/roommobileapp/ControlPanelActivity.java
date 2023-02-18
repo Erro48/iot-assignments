@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -39,8 +41,10 @@ public class ControlPanelActivity extends AppCompatActivity {
     private TextView rollerblindTextStatus;
     private Button leftArrowButton;
     private Button rightArrowButton;
+    private TextView loadingText;
+    private ProgressBar loadingBar;
 
-    private Button confirmChangeButton;
+    //private Button confirmChangeButton;
     private boolean lightStatus;
     private int rollerblindStatus;
     private BluetoothClientConnectionThread connectionThread;
@@ -58,13 +62,14 @@ public class ControlPanelActivity extends AppCompatActivity {
     }
 
     private void initUI() {
+
         lightBtn = findViewById(R.id.lightBtn);
         lightBtn.setOnClickListener((v) -> updateLightStatus());
         lightBtn.setBackgroundColor(Color.DKGRAY);
         lightBtn.setTextColor(Color.WHITE);
 
         lightTextStatus = findViewById(R.id.lightStatus);
-        lightTextStatus.setText(formatLightStatus(lightStatus));
+        lightTextStatus.setText(lightStatus ? "On" : "Off");
 
         rollerblindSlider = findViewById(R.id.rollerblindSlider);
         rollerblindSlider.setProgress(rollerblindStatus);
@@ -101,25 +106,31 @@ public class ControlPanelActivity extends AppCompatActivity {
         });
 
         rollerblindTextStatus = findViewById(R.id.rollerblindStatus);
-        rollerblindTextStatus.setText(formatRollerblindStatus(rollerblindStatus));
+        rollerblindTextStatus.setText(rollerblindStatus + "%");
 
-        confirmChangeButton = findViewById(R.id.confirmChangeBtn);
-        confirmChangeButton.setOnClickListener((v) -> sendMessage());
-        confirmChangeButton.setEnabled(false);
+        loadingText = findViewById(R.id.loadingText);
+        loadingText.setText("Connecting...");
+        loadingText.setVisibility(View.VISIBLE);
+        loadingBar = findViewById(R.id.progressBar);
+        loadingBar.setVisibility(View.VISIBLE);
+
+        //confirmChangeButton = findViewById(R.id.confirmChangeBtn);
+        //confirmChangeButton.setOnClickListener((v) -> sendMessage());
+        //confirmChangeButton.setEnabled(false);
+
+        enableInputs(false);
     }
 
-    private void sendMessage() {
+    private void sendMessage(final String message) {
         new Thread(() -> {
             try {
-                String message = (lightStatus ? "on" : "off") + ";" + Integer.toString(rollerblindStatus);
-                String verboseMessage = "Light: " + message.split(";")[0] + "\nRollerblind: " + message.split(";")[1] + "%";
                 bluetoothOutputStream.write(message.getBytes(StandardCharsets.UTF_8));
-                runOnUiThread(new Runnable() {
+                /*runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(getApplicationContext(), "Stato aggiornato", Toast.LENGTH_LONG).show();
                     }
-                });
+                });*/
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -141,11 +152,22 @@ public class ControlPanelActivity extends AppCompatActivity {
     private void manageConnectedSocket(BluetoothSocket socket) {
         try {
             bluetoothOutputStream = socket.getOutputStream();
+            if (!socket.isConnected()) {
+                throw new IOException();
+            }
             Log.i(C.TAG, "Connection successful!");
-            runOnUiThread(() -> confirmChangeButton.setEnabled(true));
+            runOnUiThread(() -> {
+                enableInputs(true);
+                loadingText.setVisibility(View.INVISIBLE);
+                loadingBar.setVisibility(View.INVISIBLE);
+            });
         } catch (IOException e) {
             Log.e(C.TAG, "Error occurred when creating output stream", e);
-            runOnUiThread(() -> confirmChangeButton.setEnabled(false));
+            runOnUiThread(() -> {
+                enableInputs(false);
+                loadingBar.setVisibility(View.GONE);
+                loadingText.setText("Cannot connect to the device");
+            });
         }
     }
 
@@ -156,16 +178,16 @@ public class ControlPanelActivity extends AppCompatActivity {
     }
 
     private String formatLightStatus(final boolean lightStatus) {
-        return lightStatus ? "On" : "Off";
+        return "l:" + lightStatus;
     }
 
     private String formatRollerblindStatus(final int rollerblindStatus) {
-        return rollerblindStatus + "%";
+        return "r:" + rollerblindStatus;
     }
 
     private void updateLightStatus() {
         lightStatus = !lightStatus;
-        lightTextStatus.setText(formatLightStatus(lightStatus));
+        lightTextStatus.setText(lightStatus ? "On" : "Off");
 
         if (lightStatus) {
             lightBtn.setBackgroundColor(Color.YELLOW);
@@ -174,6 +196,8 @@ public class ControlPanelActivity extends AppCompatActivity {
             lightBtn.setBackgroundColor(Color.DKGRAY);
             lightBtn.setTextColor(Color.WHITE);
         }
+
+        sendMessage(formatLightStatus(lightStatus));
     }
 
     private void updateRollerblindStatus(final int value) {
@@ -181,12 +205,16 @@ public class ControlPanelActivity extends AppCompatActivity {
         if (rollerblindStatus > SLIDER_MAX) rollerblindStatus = SLIDER_MAX;
         if (rollerblindStatus < SLIDER_MIN) rollerblindStatus = SLIDER_MIN;
 
-        rollerblindTextStatus.setText(formatRollerblindStatus(rollerblindStatus));
+        rollerblindTextStatus.setText(rollerblindStatus + "%");
         rollerblindSlider.setProgress(rollerblindStatus);
+
+        sendMessage(formatRollerblindStatus(rollerblindStatus));
     }
 
-    private boolean test() {
-        Log.i(C.TAG, "Ciao");
-        return true;
+    private void enableInputs(final boolean enabled) {
+        lightBtn.setEnabled(enabled);
+        leftArrowButton.setEnabled(enabled);
+        rightArrowButton.setEnabled(enabled);
+        rollerblindSlider.setEnabled(enabled);
     }
 }

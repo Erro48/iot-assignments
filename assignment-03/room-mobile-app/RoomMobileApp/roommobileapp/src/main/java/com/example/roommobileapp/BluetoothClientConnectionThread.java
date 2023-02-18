@@ -43,12 +43,15 @@ public class BluetoothClientConnectionThread extends Thread {
             socket.connect();
         } catch (IOException connectException) {
             Log.e(C.TAG, "unable to connect");
+            Log.e(C.TAG, connectException.toString());
+
             // Unable to connect; close the socket and return.
             try {
                 socket.close();
             } catch (IOException closeException) {
                 Log.e(C.TAG, "Could not close the client socket", closeException);
             }
+            handler.accept(socket);
             return;
         }
         // The connection attempt succeeded. Perform work associated with
