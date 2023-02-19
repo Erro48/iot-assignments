@@ -27,8 +27,8 @@ public class Launcher {
         vertx.deployVerticle(new MqttVerticle(MQTT_BROKER, MQTT_TOPIC));
         vertx.deployVerticle(new SerialVerticle(serialPort, rate));
         vertx.deployVerticle(new HttpVerticle(HTTP_PORT));
-        vertx.deployVerticle(new TimerVerticle());
         vertx.deployVerticle(new SmartRoomVerticle());
+        vertx.deployVerticle(new TimerVerticle());
     }
 
 }

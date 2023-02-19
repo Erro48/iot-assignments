@@ -56,6 +56,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
      * @param msg
      */
     private void handleSerialRequests(final String msg) {
+        System.out.println("Serial message received: " + msg);
         switch(msg.charAt(0)) {
             case 'L':    
                 this.setLight(Boolean.parseBoolean(msg.substring(1)));
@@ -71,7 +72,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
     private void setLight(final boolean status) {
         if (this.light != status) {
             this.light = status;
-            this.sendData(String.valueOf(this.light));
+            this.sendData("L" + String.valueOf(this.light));
             /* Start recording */
             if (this.light) {
                 this.startRecord("light");
@@ -82,7 +83,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
     private void setRollPercentage(final int percentage) {
         if (this.rollPercentage != percentage) {
             this.rollPercentage = percentage;
-            this.sendData(String.valueOf(this.rollPercentage));
+            this.sendData("M" + String.valueOf(this.rollPercentage));
         }
     }
     
@@ -91,16 +92,17 @@ public class SmartRoomVerticle extends AbstractVerticle {
      * @param msg
      */
     private void sendData(final String msg) {
+        System.out.println("Sending data buffer: " + msg);
         vertx.eventBus().send("serial.tx", msg);
     }
     
     private void startRecord(final String event) {
         final EventBus eventBus = vertx.eventBus();
-        eventBus.send("timer." + event, new JsonObject(Map.of("request", "start")));
+        eventBus.send("timer", new JsonObject(Map.of("event", event, "request", "start")));
     }
     
     private void stopRecord(final String event) {
         final EventBus eventBus = vertx.eventBus();
-        eventBus.send("timer." + event, new JsonObject(Map.of("request", "stop")));
+        eventBus.send("timer", new JsonObject(Map.of("event", event, "request", "stop")));
     }
 }

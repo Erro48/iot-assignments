@@ -20,7 +20,6 @@ public class HttpVerticle extends AbstractVerticle {
 
         router.route().handler(CorsHandler.create("*")
                 .allowedMethod(io.vertx.core.http.HttpMethod.GET)
-                .allowedMethod(io.vertx.core.http.HttpMethod.POST)
                 .allowedMethod(io.vertx.core.http.HttpMethod.PUT)
                 .allowedHeader("Access-Control-Request-Method")
                 .allowedHeader("Access-Control-Allow-Credentials")
@@ -28,15 +27,14 @@ public class HttpVerticle extends AbstractVerticle {
                 .allowedHeader("Access-Control-Allow-Headers")
                 .allowedHeader("Content-Type"));
 
-
         router.get("/light")
-            .handler( ctx -> this.getData(ctx, "request.light"));
+            .handler( ctx -> this.getData(ctx, null,"request.light"));
         
         router.get("/roll")
-            .handler( ctx -> this.getData(ctx, "request.rollpercentage"));
+            .handler( ctx -> this.getData(ctx, null, "request.rollpercentage"));
         
-        router.get("/lighttime")
-            .handler( ctx -> this.getData(ctx,  "request.lighttime"));
+        router.get("/history/light")
+            .handler( ctx -> this.getData(ctx, "light", "request.history"));
         
         router.put("/light")
             .handler( ctx -> this.sendData(ctx, "controller.light", "status"));
@@ -55,8 +53,8 @@ public class HttpVerticle extends AbstractVerticle {
             });
     }
 
-    private void getData(final RoutingContext ctx, final String address) {
-        vertx.eventBus().request(address, null, handler -> {
+    private void getData(final RoutingContext ctx, final String message, final String address) {
+        vertx.eventBus().request(address, message, handler -> {
             if (handler.succeeded()) {
                 ctx.response().end((String)handler.result().body());
             } else {
@@ -73,7 +71,5 @@ public class HttpVerticle extends AbstractVerticle {
             vertx.eventBus().send(address, param);
             ctx.response().end();
     	});
-    	
-        
     }
 }

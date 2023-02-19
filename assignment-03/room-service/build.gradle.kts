@@ -22,6 +22,7 @@ dependencies {
     implementation ("io.vertx:vertx-web:4.3.1")
     implementation ("io.vertx:vertx-web-client:4.3.1")
     implementation ("io.vertx:vertx-mqtt:4.3.1")
+    implementation ("io.vertx:vertx-codegen:4.3.1")
 
     // Use JUnit test framework
     testImplementation ("junit:junit:4.13.2")
@@ -31,8 +32,10 @@ dependencies {
 	implementation ("org.slf4j:slf4j-jdk14:1.7.36")
 	
     implementation("io.github.java-native:jssc:2.9.4")
-	
+    implementation ("com.fasterxml.jackson.core:jackson-databind:2.13.0")
 }
+	
+
 
 application {
     // Define the main class for the application
