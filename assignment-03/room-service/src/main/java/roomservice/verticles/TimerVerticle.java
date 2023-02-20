@@ -30,7 +30,6 @@ public class TimerVerticle extends AbstractVerticle {
 
         eventBus.consumer(TIMER_ADDRESS, msg -> {
             final JsonObject json = (JsonObject)msg.body();
-            System.out.println(json);
             final String event = json.getString("event");
             final String request = json.getString("request");
 

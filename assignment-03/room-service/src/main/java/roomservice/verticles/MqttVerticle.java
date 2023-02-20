@@ -1,5 +1,8 @@
 package roomservice.verticles;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.mqtt.MqttClient;
@@ -9,6 +12,7 @@ public class MqttVerticle extends AbstractVerticle {
     private static final int MQTT_PORT = 1883;
     private static final int QOS_LEVEL = 2;
     
+    private final Logger logger = LoggerFactory.getLogger(MqttVerticle.class);
     private final String topic;
     private final String address;
 
@@ -27,6 +31,8 @@ public class MqttVerticle extends AbstractVerticle {
                 eventBus.publish("mqtt", s.payload().toString());
             })
             .subscribe(this.topic, QOS_LEVEL);            
+        }).exceptionHandler(exception -> {
+        	this.logger.warn(exception.getMessage());
         });
     }
 

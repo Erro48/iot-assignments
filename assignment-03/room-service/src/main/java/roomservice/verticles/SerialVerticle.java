@@ -3,6 +3,9 @@ package roomservice.verticles;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import jssc.SerialPort;
@@ -14,6 +17,7 @@ public class SerialVerticle extends AbstractVerticle implements SerialPortEventL
 
     private static final int QUEUE_SIZE = 100;
     
+	private final Logger logger = LoggerFactory.getLogger(SerialVerticle.class);
     private SerialPort serialPort;
     private BlockingQueue<String> queue;
     private StringBuffer currentMsg = new StringBuffer("");
@@ -79,8 +83,7 @@ public class SerialVerticle extends AbstractVerticle implements SerialPortEventL
                     }
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
-                System.out.println("Error in receiving string from COM-port: " + ex);
+                this.logger.warn("Error in receiving string from COM-port: {}", ex);
             }
         }
     }

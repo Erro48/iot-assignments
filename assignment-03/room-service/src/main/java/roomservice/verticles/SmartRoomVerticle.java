@@ -2,6 +2,9 @@ package roomservice.verticles;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
@@ -12,6 +15,7 @@ import roomservice.RoomData;
  */
 public class SmartRoomVerticle extends AbstractVerticle {
 
+	private final Logger logger = LoggerFactory.getLogger(SmartRoomVerticle.class);
     private boolean light;
     private int rollPercentage;
     
@@ -47,7 +51,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
              * Get the data and handle it 
              */
         } catch (Exception e) {
-            System.err.println("Invalid JSON input data!");
+           this.logger.warn("Invalid JSON input data!");
         }
     }
     
@@ -56,7 +60,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
      * @param msg
      */
     private void handleSerialRequests(final String msg) {
-        System.out.println("Serial message received: " + msg);
+        this.logger.info("Serial message received: {}", msg);
         switch(msg.charAt(0)) {
             case 'L':    
                 this.setLight(Boolean.parseBoolean(msg.substring(1)));
@@ -64,8 +68,8 @@ public class SmartRoomVerticle extends AbstractVerticle {
             case 'M':
                 this.setRollPercentage(Integer.parseInt(msg.substring(1)));
             break;
-            default: 
-                System.err.println("Unknown message from serial line");
+            default:
+            	this.logger.warn("Unknown message from serial line");
         }
     }
     

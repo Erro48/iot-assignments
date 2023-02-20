@@ -17,8 +17,8 @@ public class Launcher {
         int rate = 9600;
         
         if (args.length != 2) {
-            System.out.println("Incorrect parameters, default parameters will be used");
-            System.out.println("1 arg: SerialPort, 2 arg: Serial port rate");
+            System.out.println("To pass parameters add --\"<Serial port> <Baud rate>\" to the gradle run task. Default parameters will be used");
+            System.out.println("[1] arg: SerialPort, [2] arg: Serial port rate");
         } else {
             serialPort = args[0];
             rate = Integer.parseInt(args[1]);

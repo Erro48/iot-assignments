@@ -1,5 +1,8 @@
 package roomservice.verticles;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
@@ -8,6 +11,7 @@ import io.vertx.ext.web.handler.CorsHandler;
 
 public class HttpVerticle extends AbstractVerticle {
 
+	private final Logger logger = LoggerFactory.getLogger(HttpVerticle.class);
     private final int port;
 
     public HttpVerticle(final int port) {
@@ -46,10 +50,10 @@ public class HttpVerticle extends AbstractVerticle {
             .requestHandler(router)
             .listen(this.port)
             .onSuccess(server -> {
-                System.out.println("HTTP server started on port " + server.actualPort());
+               this.logger.info("HTTP server started on port {}", server.actualPort());
             })
             .onFailure(event -> {
-                System.out.println("Failed to start HTTP server:" + event.getMessage());
+               this.logger.warn("Failed to start HTTP server: {}", event.getMessage());
             });
     }
 
@@ -59,7 +63,7 @@ public class HttpVerticle extends AbstractVerticle {
                 ctx.response().end((String)handler.result().body());
             } else {
                 ctx.response().end();
-                System.err.println("Can not get data for address: " + address);
+                this.logger.warn("Can not get data for address: {}", address);
             }
         });
     }
