@@ -1,10 +1,5 @@
 package roomservice.verticles;
 
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
@@ -15,15 +10,11 @@ import jssc.SerialPortException;
 
 public class SerialVerticle extends AbstractVerticle implements SerialPortEventListener{
 
-    private static final int QUEUE_SIZE = 100;
-    
-	private final Logger logger = LoggerFactory.getLogger(SerialVerticle.class);
     private SerialPort serialPort;
-    private BlockingQueue<String> queue;
-    private StringBuffer currentMsg = new StringBuffer("");
+    private StringBuilder message = new StringBuilder();
+    private Boolean receivingMessage = false;
     
     public SerialVerticle(final String port, final int rate) throws SerialPortException {
-        queue = new ArrayBlockingQueue<String>(QUEUE_SIZE);
         serialPort = new SerialPort(port);
         serialPort.openPort();
 
@@ -50,7 +41,6 @@ public class SerialVerticle extends AbstractVerticle implements SerialPortEventL
         for (int i = 0; i < array.length; i++){
             bytes[i] = (byte) array[i];
         }
-
         try {
             synchronized (serialPort) {
                 serialPort.writeBytes(bytes);
@@ -63,27 +53,28 @@ public class SerialVerticle extends AbstractVerticle implements SerialPortEventL
     @Override
     public void serialEvent(final SerialPortEvent event) {
         /* if there are bytes received in the input buffer */
-        if (event.isRXCHAR()) {
+        if(event.isRXCHAR() && event.getEventValue() > 0){
             try {
-                String msg = serialPort.readString(event.getEventValue());
-                msg = msg.replaceAll("\r", "");
-                vertx.eventBus().publish("serial.rx", msg);
-                boolean goAhead = true;
-                while(goAhead) {
-                    String msg2 = currentMsg.toString();
-                    int index = msg2.indexOf("\n");
-                    if (index >= 0) {
-                        queue.put(msg2.substring(0, index));
-                        currentMsg = new StringBuffer("");
-                        if (index + 1 < msg2.length()) {
-                            vertx.eventBus().publish("serial.rx", msg2.substring(index + 1));
-                        }
-                    } else {
-                        goAhead = false;
+                final byte buffer[] = serialPort.readBytes();
+                for (byte b: buffer) {
+                    if (b == '>') {
+                        receivingMessage = true;
+                        message.setLength(0);
                     }
-                }
-            } catch (Exception ex) {
-                this.logger.warn("Error in receiving string from COM-port: {}", ex);
+                    else if (receivingMessage == true) {
+                        if (b == '\r') {
+                            receivingMessage = false;
+                            final String toProcess = message.toString();
+                        	vertx.eventBus().publish("serial.rx", toProcess);
+                        }
+                        else {
+                            message.append((char)b);
+                        }
+                    }
+                }                
+            }
+            catch (SerialPortException ex) {
+            	ex.printStackTrace();
             }
         }
     }

@@ -60,7 +60,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
      * @param msg
      */
     private void handleSerialRequests(final String msg) {
-        this.logger.info("Serial message received: {}", msg);
+        //this.logger.info("Serial message received: {}", msg);
         switch(msg.charAt(0)) {
             case 'L':    
                 this.setLight(Boolean.parseBoolean(msg.substring(1)));
@@ -96,7 +96,6 @@ public class SmartRoomVerticle extends AbstractVerticle {
      * @param msg
      */
     private void sendData(final String msg) {
-        System.out.println("Sending data buffer: " + msg);
         vertx.eventBus().send("serial.tx", msg);
     }
     
