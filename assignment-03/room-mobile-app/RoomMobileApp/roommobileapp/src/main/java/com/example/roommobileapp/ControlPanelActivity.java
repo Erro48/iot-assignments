@@ -124,7 +124,7 @@ public class ControlPanelActivity extends AppCompatActivity {
     private void sendMessage(final String message) {
         new Thread(() -> {
             try {
-                bluetoothOutputStream.write(message.getBytes(StandardCharsets.UTF_8));
+                bluetoothOutputStream.write((">" + message + "\n").getBytes(StandardCharsets.UTF_8));
                 /*runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -178,11 +178,11 @@ public class ControlPanelActivity extends AppCompatActivity {
     }
 
     private String formatLightStatus(final boolean lightStatus) {
-        return "l:" + lightStatus;
+        return "L" + lightStatus;
     }
 
     private String formatRollerblindStatus(final int rollerblindStatus) {
-        return "r:" + rollerblindStatus;
+        return "M" + rollerblindStatus;
     }
 
     private void updateLightStatus() {
