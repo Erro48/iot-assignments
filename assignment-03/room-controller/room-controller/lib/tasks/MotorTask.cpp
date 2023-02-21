@@ -17,12 +17,8 @@ void MotorTask::tick() {
         String msg = _mt->getMessage();
         if(msg.charAt(0) == 'M'){
             _mt->messageActionDone();
-            _alpha = msg.substring(1).toInt();
+            _alpha = map(msg.substring(1).toInt(), 0, 100, MOTOR_MIN_ALPHA, MOTOR_MAX_ALPHA);
             _servo.write(_alpha);
         }
     }
 }
-
-/*int MotorTask::getAlpha() {
-    return _alpha;
-}*/

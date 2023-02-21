@@ -10,7 +10,6 @@ class MotorTask: public Task {
 public:
     MotorTask(MessageTask* mt);
     void tick() override;
-    //int getAlpha();
 
 private:
     int _alpha;
