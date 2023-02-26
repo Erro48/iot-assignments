@@ -3,7 +3,9 @@
 
 #include "Task.h"
 
-#include "LedTask.h"
+#include "PirTask.h"
+#include "PhotoresistorTask.h"
+#include "ConnectionTask.h"
 
 
 #endif

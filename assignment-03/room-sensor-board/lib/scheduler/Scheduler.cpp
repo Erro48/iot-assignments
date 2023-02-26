@@ -1,9 +1,11 @@
 #include "Scheduler.h"
-// #include <TimerTwo.h>
+#include "esp32-hal-timer.h"
 
+
+hw_timer_t *timer = NULL;
 volatile bool _timerFlag;
 
-void timerHandler(void){
+void IRAM_ATTR timerHandler(void){
   _timerFlag = true;
 }
 
@@ -12,9 +14,10 @@ void Scheduler::init(int basePeriod){
   _timerFlag = false;
   long period = 1000l * basePeriod;
 
-  // Timer2.init(period, timerHandler);
-  // Timer2.attachInterrupt(timerHandler);
-  // Timer2.start();
+  timer = timerBegin(0, 80, true);
+  timerAttachInterrupt(timer, &timerHandler, true);
+  timerAlarmWrite(timer, period, true); 
+  timerAlarmEnable(timer);
   _nTasks = 0;
 }
 

@@ -6,52 +6,37 @@ Scheduler s;
 
 #define SCHEDULER_PERIOD 10
 #define TASK_PERIOD 100
+#define PHOTORESISTOR_TASK_PERIOD 1000
+
+bool *someoneIn;
+int *luminosity;
 
 void setup() {
   Serial.begin(9600);
+  someoneIn = (bool*) malloc(sizeof(bool));
+  luminosity = (int*) malloc(sizeof(int));
+
+  *someoneIn = false;
+  *luminosity = 0;
 
   s.init(SCHEDULER_PERIOD);
 
-  LedTask* ledTask = new LedTask();
-  ledTask->init(TASK_PERIOD);
+  PirTask* pirTask = new PirTask(someoneIn);
+  pirTask->init(TASK_PERIOD);
+  PhotoresistorTask* photoTask = new PhotoresistorTask(luminosity);
+  photoTask->init(TASK_PERIOD);
 
-  // StateTask* stateTask = new StateTask();
-  // stateTask->init(NORMAL_SAMPLING_PERIOD);
-  
-  // MotorModeTask* motorModeTask = new MotorModeTask(stateTask);
-  // motorModeTask->init(TASK_PERIOD);
-  
-  // Task* ledATask = new LedATask(stateTask);
-  // ledATask->init(TASK_PERIOD);
+  ConnectionTask* connectionTask = new ConnectionTask(someoneIn, luminosity);
+  connectionTask->init(TASK_PERIOD);
 
-  // Task* ledBTask = new LedBTask(stateTask);
-  // ledBTask->init(TASK_PERIOD);
-
-  // Task* ledCTask = new LedCTask(stateTask);
-  // ledCTask->init(LED_C_PERIOD);
-
-  // MotorTask* motorTask = new MotorTask(stateTask, motorModeTask);
-  // motorTask->init(TASK_PERIOD);
-
-  // Task* monitorTask = new MonitorTask();
-  // monitorTask->init(MONITOR_PERIOD);
-
-  // Task* lcdTask = new LcdDisplayTask(stateTask, motorTask);
-  // lcdTask->init(MONITOR_PERIOD);
-
-  // s.addTask(stateTask);
-  // s.addTask(ledATask);
-  // s.addTask(ledBTask);
-  // s.addTask(ledCTask);
-  // s.addTask(motorTask);
-  // s.addTask(motorModeTask);
-  // s.addTask(monitorTask);
-  // s.addTask(lcdTask);
-
-  s.addTask(ledTask);
+  s.addTask(pirTask);
+  s.addTask(photoTask);
+  s.addTask(connectionTask);
+  // pinMode(4, OUTPUT);
+  // digitalWrite(4, HIGH);
 }
 
 void loop() {
-  Serial.println("Loop");
   s.schedule();
+  // delay(1000);
 }
