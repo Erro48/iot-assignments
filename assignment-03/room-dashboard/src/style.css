@@ -82,8 +82,8 @@ input[type="button"].on {
     box-shadow: inset -2px -2px 3px rgba(0, 0, 0, .90), inset 2px 2px 3px rgba(255, 255, 255, 1);
 }
 
-fieldset > div,
-div:has( > table)  {
+fieldset > div {
+/* div:has( > table)  { */
     height: 100%;
     /* background-color: var(--secondary); */
     background-color: white;
