@@ -82,13 +82,25 @@ input[type="button"].on {
     box-shadow: inset -2px -2px 3px rgba(0, 0, 0, .90), inset 2px 2px 3px rgba(255, 255, 255, 1);
 }
 
-fieldset > div {
-/* div:has( > table)  { */
+fieldset > div,
+ .table-container { 
     height: 100%;
-    /* background-color: var(--secondary); */
     background-color: white;
     border-radius: 20px;
     padding: 1.5em;
-    box-shadow: inset -3px -3px 5px rgba(0, 0, 0, .90), inset 3px 3px 7px rgba(255, 255, 255, 0.9);
 }
 
+.table-container {
+    overflow-y: auto; /* abilita lo scrolling verticale */
+    max-height: 50vh; /* altezza massima della tabella */
+}
+
+td[data-status=ON]{
+    color: green;
+    font-weight:bold;
+}
+
+td[data-status=OFF]{
+    color: red;
+    font-weight:bold;
+}
