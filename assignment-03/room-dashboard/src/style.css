@@ -1,8 +1,8 @@
 :root {
-    --primary: #000000;
-    --secondary: #2c2c2c;
+    --primary: #2c2c2c;
+    --secondary: #5b407c;
     --accent: #BB86FC;
-    --light-clr: #eee;
+    --text-color: black;
     --light-on: gold;
 }
 
@@ -23,7 +23,7 @@ section.container form {
 input[type=number]#rollerblind-status {
     width: 15%;
     background: none;
-    color: white;
+    color: var(--text-color);
     border: none;
     text-align: right;
     -moz-appearance: textfield;
@@ -33,7 +33,7 @@ input[type=number]#rollerblind-status {
 }
 
 input[type=number]#rollerblind-status:focus {       
-    outline: 1px solid var(--light-clr);
+    outline: 1px solid var(--text-color);
 }
 
 input[type="range"] {
@@ -73,7 +73,6 @@ input[type="button"] {
 
 #confirmChangeBtn:active {
     filter: brightness(.8);
-
 }
 
 input[type="button"].on {
@@ -84,12 +83,12 @@ input[type="button"].on {
 }
 
 fieldset > div,
-div > canvas {
+div:has( > table)  {
     height: 100%;
     /* background-color: var(--secondary); */
     background-color: white;
     border-radius: 20px;
     padding: 1.5em;
     box-shadow: inset -3px -3px 5px rgba(0, 0, 0, .90), inset 3px 3px 7px rgba(255, 255, 255, 0.9);
-
 }
+

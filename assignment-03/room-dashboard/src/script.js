@@ -3,13 +3,14 @@
 const SLIDER_MAX = 100;
 const SLIDER_MIN = 0;
 const POLLING_DELAY = 1000;
+const MAX_TABLE_ROWS = 50;
 
 const oldRoomStatus = {
     light: false,
-    roll: 0
+    roll: -1
 }
 
-window.onload = () => {
+window.onload = async () => {
     const slider = document.querySelector('#rollerblind-slider')
     const sliderStatus = document.querySelector('#rollerblind-status')
     const lightBtn = document.querySelector('#lights-btn')
@@ -23,10 +24,13 @@ window.onload = () => {
     
     confirmChangeBtn.addEventListener('click', sendMessage)
 
+    const data = await getHistory()
+    initTable(data)
+
     setInterval(async function () {
-        // const [lightsOn, sliderValue] = await receiveMessage()
-        // const history = await receiveHistory()
-        // updateChart(history)
+        const [lightsOn, sliderValue] = await receiveMessage()
+        const data = await getHistory(1);
+        parseDataTable(data)
 
         if (oldRoomStatus.light != lightsOn) {
             updateButton(lightsOn)
@@ -37,6 +41,7 @@ window.onload = () => {
             updateSlider(sliderValue)
             oldRoomStatus.roll = sliderValue
         }
+        
     }, POLLING_DELAY)
 }
 
@@ -125,4 +130,38 @@ function encodeMsg(slider, light) {
 function decodeMsg(msg) {
     const [slider, light] = msg.split(':')
     return [slider, light == 'on']
+}
+
+function initTable(data) {
+    const tableBody = document.querySelector("#light-history tbody")
+    data.history.forEach(item => {
+        const trOn = document.createElement("tr")
+        trOn.innerHTML = `<td>ON</td><td>${parseDate(new Date(item.from))}</td>`
+        const trOff = document.createElement("tr")
+        trOff.innerHTML = `<td>OFF</td><td>${parseDate(new Date(item.to))}</td>`
+        tableBody.appendChild(trOn)
+        tableBody.appendChild(trOff)
+    })
+}
+
+function parseDataTable(data) {
+    const tableBody = document.querySelector("#light-history tbody")
+    if (tableBody.lastChild.querySelector("td").innerText == "ON") {
+        if (tableBody.lastChild.lastChild.innerText == parseDate(new Date(data.history[0].from))) {
+            console.log("ON UGUALI")
+        } else {
+            console.log("ON DIVERSI")
+        }
+    } else {
+        if (tableBody.lastChild.lastChild.innerText == parseDate(new Date(data.history[0].to))) {
+            console.log("OFF UGUALI")
+        } else {
+            console.log("OFF DIVERSI")
+        }
+    }
+}
+
+function parseDate(date) {
+    const formattedDate = `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
+    return formattedDate
 }

@@ -18,11 +18,12 @@ async function getRollerblindStatus() {
     return val
 }
 
-async function getHistory() {
+async function getHistory(size=MAX_TABLE_ROWS) {
     let val
-    await axios.get(`${HOST}/history`)
+    await axios.get(`${HOST}/history/light?size=${size}`)
         .then(response => val = response.data)
         .catch(err => console.error(err))
+    val.history.reverse()
     return val
 }
 
