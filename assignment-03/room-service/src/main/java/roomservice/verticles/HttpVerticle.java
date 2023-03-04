@@ -1,5 +1,7 @@
 package roomservice.verticles;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +13,7 @@ import io.vertx.ext.web.handler.CorsHandler;
 
 public class HttpVerticle extends AbstractVerticle {
 
-	private final Logger logger = LoggerFactory.getLogger(HttpVerticle.class);
+    private final Logger logger = LoggerFactory.getLogger(HttpVerticle.class);
     private final int port;
 
     public HttpVerticle(final int port) {
@@ -38,7 +40,7 @@ public class HttpVerticle extends AbstractVerticle {
             .handler( ctx -> this.getData(ctx, null, "request.rollpercentage"));
         
         router.get("/history/light")
-            .handler( ctx -> this.getData(ctx, "light", "request.history"));
+            .handler( ctx -> this.getDataParam(ctx, "light", "size", "request.history"));
         
         router.put("/light")
             .handler( ctx -> this.sendData(ctx, "controller.light", "status"));
@@ -59,6 +61,18 @@ public class HttpVerticle extends AbstractVerticle {
 
     private void getData(final RoutingContext ctx, final String message, final String address) {
         vertx.eventBus().request(address, message, handler -> {
+            if (handler.succeeded()) {
+                ctx.response().end((String)handler.result().body());
+            } else {
+                ctx.response().end();
+                this.logger.warn("Can not get data for address: {}", address);
+            }
+        });
+    }
+    
+    private void getDataParam(final RoutingContext ctx, final String message, final String paramName, final String address) {
+        final String parameter = ctx.request().getParam(paramName, "");
+        vertx.eventBus().request(address, new JsonObject(Map.of("name", message, "parameter", parameter)), handler -> {
             if (handler.succeeded()) {
                 ctx.response().end((String)handler.result().body());
             } else {

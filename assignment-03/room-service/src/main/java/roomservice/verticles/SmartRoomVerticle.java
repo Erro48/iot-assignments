@@ -15,7 +15,7 @@ import roomservice.RoomData;
  */
 public class SmartRoomVerticle extends AbstractVerticle {
 
-	private final Logger logger = LoggerFactory.getLogger(SmartRoomVerticle.class);
+    private final Logger logger = LoggerFactory.getLogger(SmartRoomVerticle.class);
     private boolean light;
     private int rollPercentage;
     
@@ -30,6 +30,7 @@ public class SmartRoomVerticle extends AbstractVerticle {
         
         eventBus.consumer("mqtt", msg -> this.handleRawData((String)msg.body()));
         eventBus.consumer("serial.rx", msg -> this.handleSerialRequests((String)msg.body()));
+        
         
         /* HTTP Api */
         eventBus.consumer("request.light", msg -> msg.reply(String.valueOf(this.light)));

@@ -17,10 +17,8 @@ public class SerialVerticle extends AbstractVerticle implements SerialPortEventL
     public SerialVerticle(final String port, final int rate) throws SerialPortException {
         serialPort = new SerialPort(port);
         serialPort.openPort();
-
         serialPort.setParams(rate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
                 SerialPort.PARITY_NONE);
-
         serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | 
                 SerialPort.FLOWCONTROL_RTSCTS_OUT);
         serialPort.addEventListener(this);
