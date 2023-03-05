@@ -9,7 +9,7 @@ public class RoomData {
     private final static String PIR_KEY = "pir";
 
     private final int light;
-    private final boolean pir;
+    private final boolean someoneIn;
 
     public RoomData(final String jsonData) throws Exception {
         Object obj = Json.decodeValue(jsonData);
@@ -23,20 +23,20 @@ public class RoomData {
         } else this.light = 0;
 
         if (json.containsKey(PIR_KEY)) {
-            this.pir = json.getBoolean(PIR_KEY);
-        } else this.pir = false;
+            this.someoneIn = json.getBoolean(PIR_KEY);
+        } else this.someoneIn = false;
     }
 
     public RoomData(final int light, final boolean pir) {
         this.light = light;
-        this.pir = pir;
+        this.someoneIn = pir;
     }
 
     public int getLight() {
         return this.light;
     }
 
-    public boolean getPir() {
-        return this.pir;
+    public boolean isSomeoneIn() {
+        return this.someoneIn;
     }
 }

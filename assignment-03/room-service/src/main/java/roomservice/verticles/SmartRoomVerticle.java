@@ -1,5 +1,6 @@
 package roomservice.verticles;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -16,12 +17,18 @@ import roomservice.RoomData;
 public class SmartRoomVerticle extends AbstractVerticle {
 
     private final Logger logger = LoggerFactory.getLogger(SmartRoomVerticle.class);
+    private final static int LIGHT_THRESHOLD = 100; 
+    
+    private boolean isFirstEntrance;
+    private boolean roomOccupied;
     private boolean light;
     private int rollPercentage;
     
     public SmartRoomVerticle() {
         this.light = false;
         this.rollPercentage = 0;
+        this.roomOccupied = false;
+        this.isFirstEntrance = true;
     }
     
     @Override
@@ -30,7 +37,6 @@ public class SmartRoomVerticle extends AbstractVerticle {
         
         eventBus.consumer("mqtt", msg -> this.handleRawData((String)msg.body()));
         eventBus.consumer("serial.rx", msg -> this.handleSerialRequests((String)msg.body()));
-        
         
         /* HTTP Api */
         eventBus.consumer("request.light", msg -> msg.reply(String.valueOf(this.light)));
@@ -48,9 +54,32 @@ public class SmartRoomVerticle extends AbstractVerticle {
     private void handleRawData(final String msg) {
         try {
             final RoomData data = new RoomData(msg);
-            /* 
-             * Get the data and handle it 
-             */
+            final LocalDateTime now = LocalDateTime.now();
+    
+            /* Someone exits the room */
+            if (this.roomOccupied && this.roomOccupied != data.isSomeoneIn()) {
+            	this.setLight(false);
+            }
+            
+            /* If someone enters and the room is dark */
+            if(data.isSomeoneIn() && this.isDark(data.getLight())) {
+            	this.setLight(true);
+            }
+            
+            /* If someone enters after 8:00 the first time */
+            if (this.isFirstEntrance && data.isSomeoneIn() && now.getHour() >= 8 && now.getHour() < 19) {
+            	this.setRollPercentage(0);
+            	this.isFirstEntrance = false;
+            }
+            
+            /* Roller blinds are unrolled at 19 if no one is in the room */
+            if (!data.isSomeoneIn() && now.getHour() >= 19 && now.getHour() < 8) {
+            	this.setRollPercentage(100);
+            	this.isFirstEntrance = true;
+            }
+            
+            this.roomOccupied = data.isSomeoneIn();
+            
         } catch (Exception e) {
            this.logger.warn("Invalid JSON input data!");
         }
@@ -61,17 +90,25 @@ public class SmartRoomVerticle extends AbstractVerticle {
      * @param msg
      */
     private void handleSerialRequests(final String msg) {
-        //this.logger.info("Serial message received: {}", msg);
         switch(msg.charAt(0)) {
             case 'L':    
-                this.setLight(Boolean.parseBoolean(msg.substring(1)));
+                this.setLight(!this.light);
             break;
             case 'M':
-                this.setRollPercentage(Integer.parseInt(msg.substring(1)));
+            	int newRoll = this.rollPercentage + Integer.parseInt(msg.substring(1));
+                if (newRoll > 100)
+                	newRoll = 100;
+                else if (newRoll < 0)
+                	newRoll = 0;
+            	this.setRollPercentage(newRoll);
             break;
             default:
             	this.logger.warn("Unknown message from serial line");
         }
+    }
+    
+    private boolean isDark(final int light) {
+    	return light <= LIGHT_THRESHOLD;
     }
     
     private void setLight(final boolean status) {
