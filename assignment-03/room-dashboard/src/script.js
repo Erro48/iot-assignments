@@ -136,9 +136,11 @@ function initTable(data) {
     const tableBody = document.querySelector("#light-history tbody")
     data.history.forEach(item => {
         const trOn = document.createElement("tr")
-        trOn.innerHTML = `<td>ON</td><td>${parseDate(new Date(item.from))}</td>`
+        trOn.innerHTML = `<td data-status="ON">ON</td><td>${parseDate(new Date(item.from))}</td>`
+        
+        if (item.to == undefined) return
         const trOff = document.createElement("tr")
-        trOff.innerHTML = `<td>OFF</td><td>${parseDate(new Date(item.to))}</td>`
+        trOff.innerHTML = `<td data-status="OFF">OFF</td><td>${parseDate(new Date(item.to))}</td>`
         tableBody.appendChild(trOn)
         tableBody.appendChild(trOff)
     })
@@ -147,16 +149,16 @@ function initTable(data) {
 function parseDataTable(data) {
     const tableBody = document.querySelector("#light-history tbody")
     if (tableBody.lastChild.querySelector("td").innerText == "ON") {
-        if (tableBody.lastChild.lastChild.innerText == parseDate(new Date(data.history[0].from))) {
-            console.log("ON UGUALI")
-        } else {
-            console.log("ON DIVERSI")
+        if (data.history[0].to != undefined) {    
+            const trOff = document.createElement("tr")
+            trOff.innerHTML = `<td data-status="OFF">OFF</td><td>${parseDate(new Date(data.history[0].to))}</td>`
+            tableBody.appendChild(trOff);
         }
     } else {
-        if (tableBody.lastChild.lastChild.innerText == parseDate(new Date(data.history[0].to))) {
-            console.log("OFF UGUALI")
-        } else {
-            console.log("OFF DIVERSI")
+        if (data.history[0].to == undefined) {
+            const trOn = document.createElement("tr")
+            trOn.innerHTML = `<td data-status="ON">ON</td><td>${parseDate(new Date(data.history[0].from))}</td>`        
+            tableBody.appendChild(trOn);
         }
     }
 }
