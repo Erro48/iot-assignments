@@ -1,6 +1,5 @@
 package com.example.roommobileapp;
 
-
 import android.os.Handler;
 import android.os.Looper;
 
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,28 +23,19 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import android.annotation.SuppressLint;
-import android.widget.Toast;
 
 public class ControlPanelActivity extends AppCompatActivity {
 
     private final static int SLIDER_DELAY = 200;
-    private final static int SLIDER_DELTA = 5;
-    private final static int SLIDER_MAX = 100;
-    private final static int SLIDER_MIN = 0;
+    private final static int ROLLER_BLIND_DELTA = 5;
     private OutputStream bluetoothOutputStream;
     private Button lightBtn;
-    private TextView lightTextStatus;
 
-    private SeekBar rollerblindSlider;
-    private TextView rollerblindTextStatus;
-    private Button leftArrowButton;
-    private Button rightArrowButton;
+    private Button minusArrowButton;
+    private Button plusArrowButton;
     private TextView loadingText;
     private ProgressBar loadingBar;
 
-    //private Button confirmChangeButton;
-    private boolean lightStatus;
-    private int rollerblindStatus;
     private BluetoothClientConnectionThread connectionThread;
 
     private Handler handler;
@@ -56,67 +45,38 @@ public class ControlPanelActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         handler = new Handler(Looper.getMainLooper());
         setContentView(R.layout.activity_control_panel);
-        lightStatus = false;
-        rollerblindStatus = 0;
         initUI();
     }
 
     private void initUI() {
 
         lightBtn = findViewById(R.id.lightBtn);
-        lightBtn.setOnClickListener((v) -> updateLightStatus());
+        lightBtn.setOnClickListener((v) -> sendMessage(formatLightStatus()));
         lightBtn.setBackgroundColor(Color.DKGRAY);
         lightBtn.setTextColor(Color.WHITE);
 
-        lightTextStatus = findViewById(R.id.lightStatus);
-        lightTextStatus.setText(lightStatus ? "On" : "Off");
-
-        rollerblindSlider = findViewById(R.id.rollerblindSlider);
-        rollerblindSlider.setProgress(rollerblindStatus);
-        rollerblindSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                updateRollerblindStatus(seekBar.getProgress());
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-        leftArrowButton = findViewById(R.id.leftArrowBtn);
-        leftArrowButton.setOnClickListener((v) -> updateRollerblindStatus(rollerblindStatus - SLIDER_DELTA));
-        leftArrowButton.setOnTouchListener(new LongPressListener(handler, SLIDER_DELAY) {
+        minusArrowButton = findViewById(R.id.leftArrowBtn);
+        minusArrowButton.setOnClickListener((v) -> sendMessage(formatRollerblindStatus((-1) * ROLLER_BLIND_DELTA)));
+        minusArrowButton.setOnTouchListener(new LongPressListener(handler, SLIDER_DELAY) {
             protected void update() {
-                updateRollerblindStatus(rollerblindStatus - SLIDER_DELTA);
+                sendMessage(formatRollerblindStatus((-1) * ROLLER_BLIND_DELTA));
             }
         });
 
-        rightArrowButton = findViewById(R.id.rightArrowBtn);
-        rightArrowButton.setOnClickListener((v) -> updateRollerblindStatus(rollerblindStatus + SLIDER_DELTA));
-        rightArrowButton.setOnTouchListener(new LongPressListener(handler, SLIDER_DELAY) {
+        plusArrowButton = findViewById(R.id.rightArrowBtn);
+        plusArrowButton.setOnClickListener((v) -> sendMessage(formatRollerblindStatus(ROLLER_BLIND_DELTA)));
+        plusArrowButton.setOnTouchListener(new LongPressListener(handler, SLIDER_DELAY) {
             protected void update() {
-                updateRollerblindStatus(rollerblindStatus + SLIDER_DELTA);
+                sendMessage(formatRollerblindStatus(ROLLER_BLIND_DELTA));
             }
         });
 
-        rollerblindTextStatus = findViewById(R.id.rollerblindStatus);
-        rollerblindTextStatus.setText(rollerblindStatus + "%");
 
         loadingText = findViewById(R.id.loadingText);
         loadingText.setText("Connecting...");
         loadingText.setVisibility(View.VISIBLE);
         loadingBar = findViewById(R.id.progressBar);
         loadingBar.setVisibility(View.VISIBLE);
-
-        //confirmChangeButton = findViewById(R.id.confirmChangeBtn);
-        //confirmChangeButton.setOnClickListener((v) -> sendMessage());
-        //confirmChangeButton.setEnabled(false);
 
         enableInputs(false);
     }
@@ -125,6 +85,7 @@ public class ControlPanelActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 bluetoothOutputStream.write((">" + message + "\n").getBytes(StandardCharsets.UTF_8));
+                Log.i(C.TAG, message);
                 /*runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -177,44 +138,18 @@ public class ControlPanelActivity extends AppCompatActivity {
         connectionThread.cancel();
     }
 
-    private String formatLightStatus(final boolean lightStatus) {
-        return "L" + lightStatus;
+    private String formatLightStatus() {
+        return "L";
     }
 
     private String formatRollerblindStatus(final int rollerblindStatus) {
-        return "M" + rollerblindStatus;
+        return "M" + String.valueOf(rollerblindStatus);
     }
 
-    private void updateLightStatus() {
-        lightStatus = !lightStatus;
-        lightTextStatus.setText(lightStatus ? "On" : "Off");
-
-        if (lightStatus) {
-            lightBtn.setBackgroundColor(Color.YELLOW);
-            lightBtn.setTextColor(Color.BLACK);
-        } else {
-            lightBtn.setBackgroundColor(Color.DKGRAY);
-            lightBtn.setTextColor(Color.WHITE);
-        }
-
-        sendMessage(formatLightStatus(lightStatus));
-    }
-
-    private void updateRollerblindStatus(final int value) {
-        rollerblindStatus = value;
-        if (rollerblindStatus > SLIDER_MAX) rollerblindStatus = SLIDER_MAX;
-        if (rollerblindStatus < SLIDER_MIN) rollerblindStatus = SLIDER_MIN;
-
-        rollerblindTextStatus.setText(rollerblindStatus + "%");
-        rollerblindSlider.setProgress(rollerblindStatus);
-
-        sendMessage(formatRollerblindStatus(rollerblindStatus));
-    }
 
     private void enableInputs(final boolean enabled) {
         lightBtn.setEnabled(enabled);
-        leftArrowButton.setEnabled(enabled);
-        rightArrowButton.setEnabled(enabled);
-        rollerblindSlider.setEnabled(enabled);
+        minusArrowButton.setEnabled(enabled);
+        plusArrowButton.setEnabled(enabled);
     }
 }
