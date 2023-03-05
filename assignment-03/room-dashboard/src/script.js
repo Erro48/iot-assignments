@@ -117,8 +117,6 @@ function sendMessage() {
     const sliderStatus = document.querySelector('#rollerblind-slider').value
     const lightStatus = document.querySelector('#lights-status').value == 'On'
 
-    console.log(sliderStatus, lightStatus);
-
     updateLightStatus(lightStatus)
     updateRollerblindStatus(sliderStatus)
 }
@@ -148,7 +146,13 @@ function initTable(data) {
 
 function parseDataTable(data) {
     const tableBody = document.querySelector("#light-history tbody")
-    if (tableBody.lastChild.querySelector("td").innerText == "ON") {
+    if (data.history.length == 0) return
+    if (tableBody.childElementCount == 0) {
+        const trOn = document.createElement("tr")
+        trOn.innerHTML = `<td data-status="ON">ON</td><td>${parseDate(new Date(data.history[0].from))}</td>`        
+        tableBody.appendChild(trOn);
+    }
+    else if (tableBody.lastChild.querySelector("td").innerText == "ON") {
         if (data.history[0].to != undefined) {    
             const trOff = document.createElement("tr")
             trOff.innerHTML = `<td data-status="OFF">OFF</td><td>${parseDate(new Date(data.history[0].to))}</td>`

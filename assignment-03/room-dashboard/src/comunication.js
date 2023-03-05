@@ -29,12 +29,10 @@ async function getHistory(size=MAX_TABLE_ROWS) {
 
 function updateLightStatus(light) {
     axios.put(HOST + `/light`, { status: light }, {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
-        .then(response => console.log(response))
         .catch(err => console.log(err))
 }
 
 function updateRollerblindStatus(roll) {
     axios.put(HOST + '/roll', { percentage: roll }, {headers: {'Content-Type': 'application/json'}}, { withCredentials: true })
-        .then(response => console.log(response))
         .catch(err => console.log(err))
 }
